@@ -20,11 +20,8 @@ logger = logging.getLogger(__name__)
 
 class SiteAPIView(APIView):
     """
-   列出系统中的所有用户的视图。
-
-   * 需要token认证
-   * 只有管理员用户可以访问这个视图。
-   """
+    站点管理视图
+    """
 
     @method_decorator(cache_page(60))
     @method_decorator(vary_on_headers("Authorization", ))
@@ -72,8 +69,15 @@ class SiteAPIView(APIView):
         """
         data = request.data
         serializer = SiteSerializer(data=data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
+        try:
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+        except Exception as e:
+            logger.error('error: %s' % e)
+            return Response({
+                'msg': '添加失败：%s' % e,
+                'success': False
+            }, status.HTTP_200_OK)
         return Response({
             'msg': '添加成功',
             'success': True,
@@ -90,10 +94,16 @@ class SiteAPIView(APIView):
         site_id = data.get('id')
         obj = Site.objects.filter(id=site_id).first()
         if obj:
-            del data['id']
             serializer = SiteSerializer(obj, data=data, partial=True)
-            serializer.is_valid(raise_exception=True)
-            serializer.save()
+            try:
+                serializer.is_valid(raise_exception=True)
+                serializer.save()
+            except Exception as e:
+                logger.error('error: %s' % e)
+                return Response({
+                    'msg': '修改失败：%s' % e,
+                    'success': False
+                }, status.HTTP_200_OK)
         return Response({
             'msg': '修改成功',
             'success': True,

@@ -21,6 +21,12 @@ class FileUploadView(APIView):
     parser_classes = (MultiPartParser,)
 
     def post(self, request, format=None):
+        """
+        可接受上传任何文件
+        :param request:
+        :param format:
+        :return:
+        """
         files = request.FILES.getlist("attachment", None)
         if not files or len(files) == 0:
             return Response({
@@ -53,6 +59,12 @@ class VideoUploadView(APIView):
     parser_classes = (MultiPartParser,)
 
     def post(self, request, format=None):
+        """
+        上传视频
+        :param request:
+        :param format:
+        :return:
+        """
         files = request.FILES.getlist("video", None)
         if not files or len(files) == 0:
             return Response({

@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
 # !/usr/bin/env python
 
-# @Time    : 2021/7/30 19:04
+# @Time    : 2021/8/25 10:04
 # @Author  : NoWords
-# @FileName: user_view.py
-from django.contrib.auth.models import User
+# @FileName: tags_view.py
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from django.views.decorators.vary import vary_on_headers
 
-from ..serializers import UserSerializer
+from ..serializers import TagsSerializer
+from ..models import Tags
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -18,47 +18,35 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class UserAPIView(APIView):
+class TagsAPIView(APIView):
     """
-    用户管理视图
+    标签管理
     """
 
     @method_decorator(cache_page(60))
     @method_decorator(vary_on_headers("Authorization", ))
     def get(self, request, *args, **kwargs):
         """
-        获取用户列表
-        :param request:
-        :param args:
-        :param kwargs:
-        :return:
+        获取标签列表
+        :param request: 
+        :param args: 
+        :param kwargs: 
+        :return: 
         """
         data = request.GET
         filters = {}
         page_size = data.get('pageSize')
         page_no = data.get('pageNo')
+        tags_id = data.get('id')
+        is_active = data.get('isActive')
+        name = data.get('name')
         sort = data.get('sort')
-        user_id = data.get('id')
-        username = data.get('username')
-        email = data.get('email')
-        first_name = data.get('first_name')
-        last_name = data.get('last_name')
-        is_active = data.get('is_active')
-        is_staff = data.get('is_staff')
-        if user_id:
-            filters['id'] = user_id
-        if username:
-            filters['username__contains'] = username
-        if first_name:
-            filters['first_name__contains'] = first_name
-        if last_name:
-            filters['last_name__contains'] = last_name
-        if email:
-            filters['email__contains'] = email
+        if tags_id:
+            filters['id'] = tags_id
+        if name:
+            filters['name__contains'] = name
         if is_active:
             filters['is_active'] = is_active
-        if is_staff:
-            filters['is_staff'] = is_staff
         if sort:
             sort_list = sort.split(',')
         else:
@@ -66,25 +54,25 @@ class UserAPIView(APIView):
         if page_size and page_no:
             start = (int(page_no) - 1) * int(page_size)
             end = start + int(page_size)
-            rows = User.objects.filter(**filters).order_by(*sort_list)[start:end]
+            rows = Tags.objects.filter(**filters).order_by(*sort_list)[start:end]
         else:
-            rows = User.objects.filter(**filters).order_by(*sort_list)
+            rows = Tags.objects.filter(**filters).order_by(*sort_list)
         return Response({
             'msg': '获取成功',
             'success': True,
-            'data': {'rows': UserSerializer(rows, many=True).data, 'total': rows.count()}
+            'data': {'rows': TagsSerializer(rows, many=True).data, 'total': rows.count()}
         }, status.HTTP_200_OK)
 
     def post(self, request, *args, **kwargs):
         """
-        添加用户
-        :param request:
-        :param args:
-        :param kwargs:
-        :return:
+        新增标签
+        :param request: 
+        :param args: 
+        :param kwargs: 
+        :return: 
         """
         data = request.data
-        serializer = UserSerializer(data=data)
+        serializer = TagsSerializer(obj, data=data, partial=True)
         try:
             serializer.is_valid(raise_exception=True)
             serializer.save()
@@ -101,17 +89,17 @@ class UserAPIView(APIView):
 
     def put(self, request, *args, **kwargs):
         """
-        修改用户
-        :param request:
-        :param args:
-        :param kwargs:
-        :return:
+        修改标签
+        :param request: 
+        :param args: 
+        :param kwargs: 
+        :return: 
         """
         data = request.data
-        user_id = data.get('id')
-        obj = User.objects.filter(id=user_id).first()
+        tags_id = data.get('id')
+        obj = Tags.objects.filter(id=tags_id).first()
         if obj:
-            serializer = UserSerializer(obj, data=data, partial=True)
+            serializer = TagsSerializer(obj, data=data, partial=True)
             try:
                 serializer.is_valid(raise_exception=True)
                 serializer.save()
@@ -128,18 +116,18 @@ class UserAPIView(APIView):
 
     def delete(self, request, *args, **kwargs):
         """
-        删除用户
-        :param request:
-        :param args:
-        :param kwargs:
-        :return:
+        删除标签
+        :param request: 
+        :param args: 
+        :param kwargs: 
+        :return: 
         """
         data = request.GET
-        user_id = data.get('id')
-        u = User.objects.get(id=user_id)
+        tags_id = data.get('id')
+        u = Tags.objects.get(id=tags_id)
         u.delete()
         return Response({
             'msg': '删除用户成功',
             'success': True,
-            'data': UserSerializer(u).data
+            'data': TagsSerializer(u).data
         }, status.HTTP_200_OK)

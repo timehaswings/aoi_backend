@@ -20,21 +20,14 @@ def hello():
 def start():
     scheduler = BackgroundScheduler(settings.SCHEDULER_CONFIG)
 
-    # Adding this job here instead of to crons.
-    # This will do the following:
-    # - Add a scheduled job to the job store on application initialization
-    # - The job will execute a model class method at midnight each day
-    # - replace_existing in combination with the unique ID prevents duplicate copies of the job
-    scheduler.add_job(
-        hello,
-        trigger=CronTrigger(second="*/10"),
-        id="hello_scheduler",
-        max_instances=1,
-        replace_existing=True,
-    )
-    logger.info("Added job 'hello_scheduler'.")
+    # scheduler.add_job(
+    #     hello,
+    #     trigger=CronTrigger(second="*/10"),
+    #     id="hello_scheduler",
+    #     max_instances=1,
+    #     replace_existing=True,
+    # )
+    # logger.info("Added job 'hello_scheduler'.")
 
-    # Add the scheduled jobs to the Django admin interface
-    # register_events(scheduler)
-    logger.info("Starting scheduler...")
     scheduler.start()
+    logger.info("Started scheduler...")
