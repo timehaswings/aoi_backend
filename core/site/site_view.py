@@ -92,18 +92,22 @@ class SiteAPIView(APIView):
         """
         data = request.data
         site_id = data.get('id')
-        obj = Site.objects.filter(id=site_id).first()
-        if obj:
-            serializer = SiteSerializer(obj, data=data, partial=True)
-            try:
-                serializer.is_valid(raise_exception=True)
-                serializer.save()
-            except Exception as e:
-                logger.error('error: %s' % e)
-                return Response({
-                    'msg': '修改失败：%s' % e,
-                    'success': False
-                }, status.HTTP_200_OK)
+        site = Site.objects.filter(id=site_id).first()
+        if not site:
+            return Response({
+                'msg': '数据不存在',
+                'success': False
+            }, status.HTTP_200_OK)
+        serializer = SiteSerializer(site, data=data, partial=True)
+        try:
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+        except Exception as e:
+            logger.error('error: %s' % e)
+            return Response({
+                'msg': '修改失败：%s' % e,
+                'success': False
+            }, status.HTTP_200_OK)
         return Response({
             'msg': '修改成功',
             'success': True,
@@ -118,9 +122,14 @@ class SiteAPIView(APIView):
         """
         data = request.GET
         site_id = data.get('id')
-        u = Site.objects.get(id=site_id)
-        u.delete()
+        site = Site.objects.get(id=site_id)
+        if not site:
+            return Response({
+                'msg': '数据不存在',
+                'success': False
+            }, status.HTTP_200_OK)
+        site.delete()
         return Response({
             'msg': '删除成功',
-            'success': SiteSerializer(u).data
+            'success': SiteSerializer(site).data
         }, status.HTTP_200_OK)

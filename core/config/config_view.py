@@ -89,18 +89,22 @@ class ConfigAPIView(APIView):
         """
         data = request.data
         config_id = data.get('id')
-        obj = Config.objects.filter(id=config_id).first()
-        if obj:
-            serializer = ConfigSerializer(obj, data=data, partial=True)
-            try:
-                serializer.is_valid(raise_exception=True)
-                serializer.save()
-            except Exception as e:
-                logger.error('error: %s' % e)
-                return Response({
-                    'msg': '修改失败：%s' % e,
-                    'success': False
-                }, status.HTTP_200_OK)
+        config = Config.objects.filter(id=config_id).first()
+        if not config:
+            return Response({
+                'msg': '数据不存在',
+                'success': False
+            }, status.HTTP_200_OK)
+        serializer = ConfigSerializer(config, data=data, partial=True)
+        try:
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+        except Exception as e:
+            logger.error('error: %s' % e)
+            return Response({
+                'msg': '修改失败：%s' % e,
+                'success': False
+            }, status.HTTP_200_OK)
         return Response({
             'msg': '修改成功',
             'success': True,
@@ -115,9 +119,14 @@ class ConfigAPIView(APIView):
         """
         data = request.GET
         config_id = data.get('id')
-        u = Config.objects.get(id=config_id)
-        u.delete()
+        config = Config.objects.get(id=config_id)
+        if not config:
+            return Response({
+                'msg': '数据不存在',
+                'success': False
+            }, status.HTTP_200_OK)
+        config.delete()
         return Response({
             'msg': '删除成功',
-            'success': ConfigSerializer(u).data
+            'success': ConfigSerializer(config).data
         }, status.HTTP_200_OK)

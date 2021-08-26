@@ -72,7 +72,7 @@ class CategoryAPIView(APIView):
         :return:
         """
         data = request.data
-        serializer = CategorySerializer(obj, data=data, partial=True)
+        serializer = CategorySerializer(data=data, partial=True)
         try:
             serializer.is_valid(raise_exception=True)
             serializer.save()
@@ -97,18 +97,22 @@ class CategoryAPIView(APIView):
         """
         data = request.data
         category_id = data.get('id')
-        obj = Category.objects.filter(id=category_id).first()
-        if obj:
-            serializer = CategorySerializer(obj, data=data, partial=True)
-            try:
-                serializer.is_valid(raise_exception=True)
-                serializer.save()
-            except Exception as e:
-                logger.error('error: %s' % e)
-                return Response({
-                    'msg': '修改失败：%s' % e,
-                    'success': False
-                }, status.HTTP_200_OK)
+        category = Category.objects.filter(id=category_id).first()
+        if not category:
+            return Response({
+                'msg': '数据不存在',
+                'success': False
+            }, status.HTTP_200_OK)
+        serializer = CategorySerializer(category, data=data, partial=True)
+        try:
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+        except Exception as e:
+            logger.error('error: %s' % e)
+            return Response({
+                'msg': '修改失败：%s' % e,
+                'success': False
+            }, status.HTTP_200_OK)
         return Response({
             'msg': '修改成功',
             'success': True
@@ -124,10 +128,15 @@ class CategoryAPIView(APIView):
         """
         data = request.GET
         category_id = data.get('id')
-        u = Category.objects.get(id=category_id)
-        u.delete()
+        category = Category.objects.get(id=category_id)
+        if not category:
+            return Response({
+                'msg': '数据不存在',
+                'success': False
+            }, status.HTTP_200_OK)
+        category.delete()
         return Response({
             'msg': '删除用户成功',
             'success': True,
-            'data': CategorySerializer(u).data
+            'data': CategorySerializer(category).data
         }, status.HTTP_200_OK)

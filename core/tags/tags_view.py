@@ -72,7 +72,7 @@ class TagsAPIView(APIView):
         :return: 
         """
         data = request.data
-        serializer = TagsSerializer(obj, data=data, partial=True)
+        serializer = TagsSerializer(data=data, partial=True)
         try:
             serializer.is_valid(raise_exception=True)
             serializer.save()
@@ -97,18 +97,22 @@ class TagsAPIView(APIView):
         """
         data = request.data
         tags_id = data.get('id')
-        obj = Tags.objects.filter(id=tags_id).first()
-        if obj:
-            serializer = TagsSerializer(obj, data=data, partial=True)
-            try:
-                serializer.is_valid(raise_exception=True)
-                serializer.save()
-            except Exception as e:
-                logger.error('error: %s' % e)
-                return Response({
-                    'msg': '修改失败：%s' % e,
-                    'success': False
-                }, status.HTTP_200_OK)
+        tags = Tags.objects.filter(id=tags_id).first()
+        if not tags:
+            return Response({
+                'msg': '数据不存在',
+                'success': False
+            }, status.HTTP_200_OK)
+        serializer = TagsSerializer(tags, data=data, partial=True)
+        try:
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+        except Exception as e:
+            logger.error('error: %s' % e)
+            return Response({
+                'msg': '修改失败：%s' % e,
+                'success': False
+            }, status.HTTP_200_OK)
         return Response({
             'msg': '修改成功',
             'success': True
@@ -124,10 +128,15 @@ class TagsAPIView(APIView):
         """
         data = request.GET
         tags_id = data.get('id')
-        u = Tags.objects.get(id=tags_id)
-        u.delete()
+        tags = Tags.objects.get(id=tags_id)
+        if not tags:
+            return Response({
+                'msg': '数据不存在',
+                'success': False
+            }, status.HTTP_200_OK)
+        tags.delete()
         return Response({
             'msg': '删除用户成功',
             'success': True,
-            'data': TagsSerializer(u).data
+            'data': TagsSerializer(tags).data
         }, status.HTTP_200_OK)

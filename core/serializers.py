@@ -7,7 +7,7 @@
 from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
 from core.models import Tags, Category, BaseVideo, \
-    Comment, Config
+    Comment, Config, UserTravel
 from rest_framework import serializers
 
 
@@ -78,5 +78,14 @@ class ConfigSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Config
+        fields = '__all__'
+        read_only_fields = ['create_time']
+
+
+class UserTravelSerializer(serializers.ModelSerializer):
+    create_time = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S')
+
+    class Meta:
+        model = UserTravel
         fields = '__all__'
         read_only_fields = ['create_time']
