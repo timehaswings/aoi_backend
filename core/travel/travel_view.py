@@ -20,14 +20,14 @@ logger = logging.getLogger(__name__)
 
 class UserTravelAPIView(APIView):
     """
-    分类管理
+    用户轨迹管理
     """
 
     @method_decorator(cache_page(60))
     @method_decorator(vary_on_headers("Authorization", ))
     def get(self, request, *args, **kwargs):
         """
-        获取分类列表
+        获取用户轨迹列表
         :param request:
         :param args:
         :param kwargs:
@@ -128,7 +128,7 @@ class UserTravelAPIView(APIView):
             }, status.HTTP_200_OK)
         user_travel.delete()
         return Response({
-            'msg': '删除用户成功',
+            'msg': '删除用户轨迹成功',
             'success': True,
             'data': UserTravelSerializer(user_travel).data
         }, status.HTTP_200_OK)

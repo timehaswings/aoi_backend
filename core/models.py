@@ -61,8 +61,8 @@ class BaseVideo(models.Model):
     create_id = models.IntegerField(verbose_name='创建人ID')
     create_name = models.CharField(max_length=10, verbose_name='创建人姓名')
     create_time = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')
-    update_id = models.IntegerField(verbose_name='更新人ID')
-    update_name = models.CharField(max_length=10, verbose_name='更新人姓名')
+    updater_id = models.IntegerField(verbose_name='更新人ID')
+    updater_name = models.CharField(max_length=10, verbose_name='更新人姓名')
     update_time = models.DateTimeField(auto_now=True, verbose_name='更新时间')
     is_delete = models.BooleanField(default=False, verbose_name='是否已删除')
     category = models.ForeignKey(Category, on_delete=models.DO_NOTHING, verbose_name='视频类别')
@@ -71,6 +71,27 @@ class BaseVideo(models.Model):
     class Meta:
         db_table = 'tb_base_video'
         verbose_name = '视频表单'
+        verbose_name_plural = verbose_name
+
+
+# 发现管理表
+class Discover(models.Model):
+    id = models.AutoField(primary_key=True, verbose_name='自增id')
+    name = models.CharField(max_length=50, verbose_name='名称')
+    content = models.TextField(blank=True, null=True, verbose_name='内容')
+    is_active = models.BooleanField(default=True, verbose_name='是否启用')
+    sort = models.IntegerField(default=100, verbose_name='排序前后')
+    create_id = models.IntegerField(verbose_name='创建人ID')
+    create_name = models.CharField(max_length=10, verbose_name='创建姓名')
+    create_time = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')
+    updater_name = models.CharField(max_length=10, verbose_name='更新人姓名')
+    updater_id = models.IntegerField(verbose_name='更新人ID')
+    update_time = models.DateTimeField(auto_now=True, verbose_name='更新时间')
+    is_delete = models.BooleanField(default=False, verbose_name='是否已删除')
+
+    class Meta:
+        db_table = 'tb_discover'
+        verbose_name = '发现表'
         verbose_name_plural = verbose_name
 
 
@@ -86,7 +107,8 @@ class Comment(models.Model):
     create_name = models.CharField(max_length=10, verbose_name='创建姓名')
     create_time = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')
     is_delete = models.BooleanField(default=False, verbose_name='是否已删除')
-    video = models.ForeignKey(BaseVideo, on_delete=models.DO_NOTHING, verbose_name='视频')
+    video = models.ForeignKey(BaseVideo, blank=True, null=True, on_delete=models.DO_NOTHING, verbose_name='视频')
+    discover = models.ForeignKey(Discover, blank=True, null=True, on_delete=models.DO_NOTHING, verbose_name='发现')
 
     class Meta:
         db_table = 'tb_comment'
@@ -130,7 +152,8 @@ class UserTravel(models.Model):
     )
     id = models.AutoField(primary_key=True, verbose_name='自增id')
     user = models.ForeignKey(User, on_delete=models.DO_NOTHING, verbose_name='视频')
-    video = models.ForeignKey(BaseVideo, on_delete=models.DO_NOTHING, verbose_name='视频')
+    video = models.ForeignKey(BaseVideo, blank=True, null=True, on_delete=models.DO_NOTHING, verbose_name='视频')
+    discover = models.ForeignKey(Discover, blank=True, null=True, on_delete=models.DO_NOTHING, verbose_name='发现')
     operation = models.CharField(max_length=20, choices=OPERATION_CHOICES, verbose_name='操作类型')
     create_time = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')
     is_delete = models.BooleanField(default=False, verbose_name='是否删除')
@@ -138,4 +161,23 @@ class UserTravel(models.Model):
     class Meta:
         db_table = 'tb_user_travel'
         verbose_name = '用户轨迹表'
+        verbose_name_plural = verbose_name
+
+
+# 活动记录
+class Deeds(models.Model):
+    id = models.AutoField(primary_key=True, verbose_name='自增id')
+    title = models.CharField(max_length=80, verbose_name='活动标题')
+    content = models.TextField(blank=True, default=[], verbose_name='活动内容')
+    create_id = models.IntegerField(verbose_name='创建人ID')
+    create_name = models.CharField(max_length=10, verbose_name='创建姓名')
+    create_time = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')
+    updater_id = models.IntegerField(verbose_name='更新人ID')
+    updater_name = models.CharField(max_length=10, verbose_name='更新人姓名')
+    update_time = models.DateTimeField(auto_now=True, verbose_name='更新时间')
+    is_delete = models.BooleanField(default=False, verbose_name='是否删除')
+
+    class Meta:
+        db_table = 'tb_deeds'
+        verbose_name = '活动表'
         verbose_name_plural = verbose_name

@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
 # !/usr/bin/env python
 
-# @Time    : 2021/8/25 10:04
+# @Time    : 2021/8/26 12:59
 # @Author  : NoWords
-# @FileName: tags_view.py
+# @FileName: deeds_view.py
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from django.views.decorators.vary import vary_on_headers
 
-from ..serializers import TagsSerializer
-from ..models import Tags
+from ..serializers import DeedsSerializer
+from ..models import Deeds
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -18,35 +18,35 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class TagsAPIView(APIView):
+class DeedsAPIView(APIView):
     """
-    标签管理
+    活动管理
     """
 
     @method_decorator(cache_page(60))
     @method_decorator(vary_on_headers("Authorization", ))
     def get(self, request, *args, **kwargs):
         """
-        获取标签列表
+        获取活动列表
         :param request: 
         :param args: 
         :param kwargs: 
         :return: 
         """
         data = request.GET
-        filters = {}
         page_size = data.get('pageSize')
         page_no = data.get('pageNo')
-        tags_id = data.get('id')
-        is_active = data.get('isActive')
-        name = data.get('name')
+        deeds_id = data.get('id')
+        title = data.get('title')
+        content = data.get('content')
         sort = data.get('sort')
-        if tags_id:
-            filters['id'] = tags_id
-        if name:
-            filters['name__contains'] = name
-        if is_active:
-            filters['is_active'] = is_active
+        filters = {'is_delete': 0}
+        if deeds_id:
+            filters['id'] = deeds_id
+        if title:
+            filters['title__contains'] = title
+        if content:
+            filters['content__contains'] = content
         if sort:
             sort_list = sort.split(',')
         else:
@@ -54,25 +54,25 @@ class TagsAPIView(APIView):
         if page_size and page_no:
             start = (int(page_no) - 1) * int(page_size)
             end = start + int(page_size)
-            rows = Tags.objects.filter(**filters).order_by(*sort_list)[start:end]
+            rows = Deeds.objects.filter(**filters).order_by(*sort_list)[start:end]
         else:
-            rows = Tags.objects.filter(**filters).order_by(*sort_list)
+            rows = Deeds.objects.filter(**filters).order_by(*sort_list)
         return Response({
             'msg': '获取成功',
             'success': True,
-            'data': {'rows': TagsSerializer(rows, many=True).data, 'total': rows.count()}
+            'data': {'rows': DeedsSerializer(rows, many=True).data, 'total': rows.count()}
         }, status.HTTP_200_OK)
 
     def post(self, request, *args, **kwargs):
         """
-        新增标签
+        新增活动
         :param request: 
         :param args: 
         :param kwargs: 
         :return: 
         """
         data = request.data
-        serializer = TagsSerializer(data=data, partial=True)
+        serializer = DeedsSerializer(data=data, partial=True)
         try:
             serializer.is_valid(raise_exception=True)
             serializer.save()
@@ -89,21 +89,21 @@ class TagsAPIView(APIView):
 
     def put(self, request, *args, **kwargs):
         """
-        修改标签
+        修改活动
         :param request: 
         :param args: 
         :param kwargs: 
         :return: 
         """
         data = request.data
-        tags_id = data.get('id')
-        tags = Tags.objects.filter(id=tags_id).first()
-        if not tags:
+        deeds_id = data.get('id')
+        deeds = Deeds.objects.filter(id=deeds_id).first()
+        if not deeds:
             return Response({
                 'msg': '数据不存在',
                 'success': False
             }, status.HTTP_200_OK)
-        serializer = TagsSerializer(tags, data=data, partial=True)
+        serializer = DeedsSerializer(deeds, data=data, partial=True)
         try:
             serializer.is_valid(raise_exception=True)
             serializer.save()
@@ -120,23 +120,23 @@ class TagsAPIView(APIView):
 
     def delete(self, request, *args, **kwargs):
         """
-        删除标签
+        删除活动
         :param request: 
         :param args: 
         :param kwargs: 
         :return: 
         """
         data = request.GET
-        tags_id = data.get('id')
-        tags = Tags.objects.get(id=tags_id)
-        if not tags:
+        deeds_id = data.get('id')
+        deeds = Deeds.objects.get(id=deeds_id)
+        if not deeds:
             return Response({
                 'msg': '数据不存在',
                 'success': False
             }, status.HTTP_200_OK)
-        tags.delete()
+        deeds.delete()
         return Response({
-            'msg': '删除标签成功',
+            'msg': '删除活动成功',
             'success': True,
-            'data': TagsSerializer(tags).data
+            'data': DeedsSerializer(deeds).data
         }, status.HTTP_200_OK)

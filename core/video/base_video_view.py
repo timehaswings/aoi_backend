@@ -74,9 +74,9 @@ class BaseVideoAPIView(APIView):
         """
         data = request.data
         data['create_id'] = request.video.id
-        data['update_id'] = data['create_id']
+        data['updater_id'] = data['create_id']
         data['create_name'] = request.video.videoname
-        data['update_name'] = data['create_name']
+        data['updater_name'] = data['create_name']
         data['is_delete'] = False
         data['guid'] = str(uuid.uuid1().int)
         serializer = BaseVideoSerializer(data=data)
@@ -103,8 +103,8 @@ class BaseVideoAPIView(APIView):
         :return:
         """
         data = request.data
-        data['update_id'] = request.video.id
-        data['update_name'] = request.video.videoname
+        data['updater_id'] = request.video.id
+        data['updater_name'] = request.video.videoname
         video = BaseVideo.objects.filter(id=data.get('id')).first()
         if not video:
             return Response({
@@ -144,7 +144,7 @@ class BaseVideoAPIView(APIView):
             }, status.HTTP_200_OK)
         video.delete()
         return Response({
-            'msg': '删除用户成功',
+            'msg': '删除视频成功',
             'success': True,
             'data': BaseVideoSerializer(video).data
         }, status.HTTP_200_OK)

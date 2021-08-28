@@ -20,14 +20,14 @@ logger = logging.getLogger(__name__)
 
 class CommentAPIView(APIView):
     """
-    分类管理
+    评论管理
     """
 
     @method_decorator(cache_page(60))
     @method_decorator(vary_on_headers("Authorization", ))
     def get(self, request, *args, **kwargs):
         """
-        获取分类列表
+        获取评论列表
         :param request:
         :param args:
         :param kwargs:
@@ -128,7 +128,7 @@ class CommentAPIView(APIView):
             }, status.HTTP_200_OK)
         comment.delete()
         return Response({
-            'msg': '删除用户成功',
+            'msg': '删除评论成功',
             'success': True,
             'data': CommentSerializer(comment).data
         }, status.HTTP_200_OK)

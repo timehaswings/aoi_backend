@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
 # !/usr/bin/env python
 
-# @Time    : 2021/8/25 10:04
+# @Time    : 2021/8/28 8:56
 # @Author  : NoWords
-# @FileName: tags_view.py
+# @FileName: discover_view.py
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from django.views.decorators.vary import vary_on_headers
 
-from ..serializers import TagsSerializer
-from ..models import Tags
+from ..serializers import DiscoverSerializer
+from ..models import Discover
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -18,33 +18,36 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class TagsAPIView(APIView):
+class DiscoverAPIView(APIView):
     """
-    标签管理
+    发现管理
     """
 
     @method_decorator(cache_page(60))
     @method_decorator(vary_on_headers("Authorization", ))
     def get(self, request, *args, **kwargs):
         """
-        获取标签列表
+        获取发现列表
         :param request: 
         :param args: 
         :param kwargs: 
         :return: 
         """
         data = request.GET
-        filters = {}
         page_size = data.get('pageSize')
         page_no = data.get('pageNo')
-        tags_id = data.get('id')
+        discover_id = data.get('id')
         is_active = data.get('isActive')
         name = data.get('name')
+        content = data.get('content')
         sort = data.get('sort')
-        if tags_id:
-            filters['id'] = tags_id
+        filters = {'is_delete': 0}
+        if discover_id:
+            filters['id'] = discover_id
         if name:
             filters['name__contains'] = name
+        if content:
+            filters['content__contains'] = content
         if is_active:
             filters['is_active'] = is_active
         if sort:
@@ -54,25 +57,25 @@ class TagsAPIView(APIView):
         if page_size and page_no:
             start = (int(page_no) - 1) * int(page_size)
             end = start + int(page_size)
-            rows = Tags.objects.filter(**filters).order_by(*sort_list)[start:end]
+            rows = Discover.objects.filter(**filters).order_by(*sort_list)[start:end]
         else:
-            rows = Tags.objects.filter(**filters).order_by(*sort_list)
+            rows = Discover.objects.filter(**filters).order_by(*sort_list)
         return Response({
             'msg': '获取成功',
             'success': True,
-            'data': {'rows': TagsSerializer(rows, many=True).data, 'total': rows.count()}
+            'data': {'rows': DiscoverSerializer(rows, many=True).data, 'total': rows.count()}
         }, status.HTTP_200_OK)
 
     def post(self, request, *args, **kwargs):
         """
-        新增标签
+        新增发现
         :param request: 
         :param args: 
         :param kwargs: 
         :return: 
         """
         data = request.data
-        serializer = TagsSerializer(data=data, partial=True)
+        serializer = DiscoverSerializer(data=data, partial=True)
         try:
             serializer.is_valid(raise_exception=True)
             serializer.save()
@@ -89,21 +92,21 @@ class TagsAPIView(APIView):
 
     def put(self, request, *args, **kwargs):
         """
-        修改标签
+        修改发现
         :param request: 
         :param args: 
         :param kwargs: 
         :return: 
         """
         data = request.data
-        tags_id = data.get('id')
-        tags = Tags.objects.filter(id=tags_id).first()
-        if not tags:
+        discover_id = data.get('id')
+        discover = Discover.objects.filter(id=discover_id).first()
+        if not discover:
             return Response({
                 'msg': '数据不存在',
                 'success': False
             }, status.HTTP_200_OK)
-        serializer = TagsSerializer(tags, data=data, partial=True)
+        serializer = DiscoverSerializer(discover, data=data, partial=True)
         try:
             serializer.is_valid(raise_exception=True)
             serializer.save()
@@ -120,23 +123,23 @@ class TagsAPIView(APIView):
 
     def delete(self, request, *args, **kwargs):
         """
-        删除标签
+        删除发现
         :param request: 
         :param args: 
         :param kwargs: 
         :return: 
         """
         data = request.GET
-        tags_id = data.get('id')
-        tags = Tags.objects.get(id=tags_id)
-        if not tags:
+        discover_id = data.get('id')
+        discover = Discover.objects.get(id=discover_id)
+        if not discover:
             return Response({
                 'msg': '数据不存在',
                 'success': False
             }, status.HTTP_200_OK)
-        tags.delete()
+        discover.delete()
         return Response({
-            'msg': '删除标签成功',
+            'msg': '删除发现成功',
             'success': True,
-            'data': TagsSerializer(tags).data
+            'data': DiscoverSerializer(discover).data
         }, status.HTTP_200_OK)

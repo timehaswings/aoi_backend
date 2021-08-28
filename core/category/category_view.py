@@ -136,7 +136,7 @@ class CategoryAPIView(APIView):
             }, status.HTTP_200_OK)
         category.delete()
         return Response({
-            'msg': '删除用户成功',
+            'msg': '删除分类成功',
             'success': True,
             'data': CategorySerializer(category).data
         }, status.HTTP_200_OK)
