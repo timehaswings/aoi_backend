@@ -12,22 +12,27 @@ from django.conf import settings
 
 logger = logging.getLogger(__name__)
 
+scheduler = BackgroundScheduler(settings.SCHEDULER_CONFIG)
+
 
 def hello():
     print('=== hello scheduler ===')
 
 
 def start():
-    scheduler = BackgroundScheduler(settings.SCHEDULER_CONFIG)
-
-    # scheduler.add_job(
-    #     hello,
-    #     trigger=CronTrigger(second="*/10"),
-    #     id="hello_scheduler",
-    #     max_instances=1,
-    #     replace_existing=True,
-    # )
-    # logger.info("Added job 'hello_scheduler'.")
+    scheduler.add_job(
+        hello,
+        trigger=CronTrigger(second="*/10"),
+        id="hello_scheduler",
+        max_instances=1,
+        replace_existing=True,
+    )
+    logger.info("Added job 'hello_scheduler'.")
 
     scheduler.start()
     logger.info("Started scheduler...")
+
+
+def stop():
+    scheduler.shutdown()
+    logger.info("Stopped scheduler...")
