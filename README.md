@@ -2,7 +2,7 @@
 葵花子视频后端项目
 
 ## 架构
-Django3.1 + MariaDB + wsgi
+Django3.1 + MariaDB + asgi + websocket
 
 
 
