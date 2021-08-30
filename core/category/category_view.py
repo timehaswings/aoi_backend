@@ -72,6 +72,10 @@ class CategoryAPIView(APIView):
         :return:
         """
         data = request.data
+        data['create_id'] = request.user.id
+        data['updater_id'] = data['create_id']
+        data['create_name'] = request.user.username
+        data['updater_name'] = data['create_name']
         serializer = CategorySerializer(data=data, partial=True)
         try:
             serializer.is_valid(raise_exception=True)
@@ -97,6 +101,8 @@ class CategoryAPIView(APIView):
         """
         data = request.data
         category_id = data.get('id')
+        data['updater_id'] = request.user.id
+        data['updater_name'] = request.user.username
         category = Category.objects.filter(id=category_id).first()
         if not category:
             return Response({

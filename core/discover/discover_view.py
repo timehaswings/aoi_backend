@@ -75,6 +75,10 @@ class DiscoverAPIView(APIView):
         :return: 
         """
         data = request.data
+        data['create_id'] = request.user.id
+        data['updater_id'] = data['create_id']
+        data['create_name'] = request.user.username
+        data['updater_name'] = data['create_name']
         serializer = DiscoverSerializer(data=data, partial=True)
         try:
             serializer.is_valid(raise_exception=True)
@@ -99,6 +103,8 @@ class DiscoverAPIView(APIView):
         :return: 
         """
         data = request.data
+        data['updater_id'] = request.user.id
+        data['updater_name'] = request.user.username
         discover_id = data.get('id')
         discover = Discover.objects.filter(id=discover_id).first()
         if not discover:

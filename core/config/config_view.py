@@ -65,6 +65,10 @@ class ConfigAPIView(APIView):
         :return:
         """
         data = request.data
+        data['create_id'] = request.user.id
+        data['updater_id'] = data['create_id']
+        data['create_name'] = request.user.username
+        data['updater_name'] = data['create_name']
         serializer = ConfigSerializer(data=data)
         try:
             serializer.is_valid(raise_exception=True)
@@ -88,6 +92,8 @@ class ConfigAPIView(APIView):
         :return:
         """
         data = request.data
+        data['updater_id'] = request.user.id
+        data['updater_name'] = request.user.username
         config_id = data.get('id')
         config = Config.objects.filter(id=config_id).first()
         if not config:

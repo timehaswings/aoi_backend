@@ -72,6 +72,10 @@ class TagsAPIView(APIView):
         :return: 
         """
         data = request.data
+        data['create_id'] = request.user.id
+        data['updater_id'] = data['create_id']
+        data['create_name'] = request.user.username
+        data['updater_name'] = data['create_name']
         serializer = TagsSerializer(data=data, partial=True)
         try:
             serializer.is_valid(raise_exception=True)
@@ -96,6 +100,8 @@ class TagsAPIView(APIView):
         :return: 
         """
         data = request.data
+        data['updater_id'] = request.user.id
+        data['updater_name'] = request.user.username
         tags_id = data.get('id')
         tags = Tags.objects.filter(id=tags_id).first()
         if not tags:

@@ -73,11 +73,10 @@ class BaseVideoAPIView(APIView):
         :return:
         """
         data = request.data
-        data['create_id'] = request.video.id
+        data['create_id'] = request.user.id
         data['updater_id'] = data['create_id']
-        data['create_name'] = request.video.videoname
+        data['create_name'] = request.user.username
         data['updater_name'] = data['create_name']
-        data['is_delete'] = False
         data['guid'] = str(uuid.uuid1().int)
         serializer = BaseVideoSerializer(data=data)
         try:
@@ -103,8 +102,8 @@ class BaseVideoAPIView(APIView):
         :return:
         """
         data = request.data
-        data['updater_id'] = request.video.id
-        data['updater_name'] = request.video.videoname
+        data['updater_id'] = request.user.id
+        data['updater_name'] = request.user.username
         video = BaseVideo.objects.filter(id=data.get('id')).first()
         if not video:
             return Response({

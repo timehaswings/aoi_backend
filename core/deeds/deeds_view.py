@@ -72,6 +72,10 @@ class DeedsAPIView(APIView):
         :return: 
         """
         data = request.data
+        data['create_id'] = request.user.id
+        data['updater_id'] = data['create_id']
+        data['create_name'] = request.user.username
+        data['updater_name'] = data['create_name']
         serializer = DeedsSerializer(data=data, partial=True)
         try:
             serializer.is_valid(raise_exception=True)
@@ -96,6 +100,8 @@ class DeedsAPIView(APIView):
         :return: 
         """
         data = request.data
+        data['updater_id'] = request.user.id
+        data['updater_name'] = request.user.username
         deeds_id = data.get('id')
         deeds = Deeds.objects.filter(id=deeds_id).first()
         if not deeds:

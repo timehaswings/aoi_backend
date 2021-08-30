@@ -64,6 +64,8 @@ class CommentAPIView(APIView):
         :return:
         """
         data = request.data
+        data['create_id'] = request.user.id
+        data['create_name'] = request.user.username
         serializer = CommentSerializer(data=data, partial=True)
         try:
             serializer.is_valid(raise_exception=True)
