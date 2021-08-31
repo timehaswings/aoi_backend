@@ -31,7 +31,7 @@ class BaseVideoAPIView(APIView):
         name = data.get('name')
         sort = data.get('sort')
         video_id = data.get('id')
-        filters = {'is_delete': 0}
+        filters = {'is_delete': False}
         if video_id:
             filters['id'] = video_id
         if is_active:
@@ -141,7 +141,8 @@ class BaseVideoAPIView(APIView):
                 'msg': '数据不存在',
                 'success': False
             }, status.HTTP_200_OK)
-        video.delete()
+        video.is_delete = True
+        video.save()
         return Response({
             'msg': '删除视频成功',
             'success': True,

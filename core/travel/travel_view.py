@@ -4,10 +4,6 @@
 # @Time    : 2021/8/26 11:38
 # @Author  : NoWords
 # @FileName: travel_view.py
-from django.utils.decorators import method_decorator
-from django.views.decorators.cache import cache_page
-from django.views.decorators.vary import vary_on_headers
-
 from ..serializers import UserTravelSerializer
 from ..models import UserTravel
 from rest_framework.views import APIView
@@ -23,8 +19,6 @@ class UserTravelAPIView(APIView):
     用户轨迹管理
     """
 
-    @method_decorator(cache_page(60))
-    @method_decorator(vary_on_headers("Authorization", ))
     def get(self, request, *args, **kwargs):
         """
         获取用户轨迹列表
@@ -38,7 +32,7 @@ class UserTravelAPIView(APIView):
         page_no = data.get('pageNo')
         user_travel_id = data.get('id')
         operation = data.get('operation')
-        filters = {'is_delete': 0}
+        filters = {'is_delete': False}
         if user_travel_id:
             filters['id'] = user_travel_id
         if operation:
@@ -126,7 +120,8 @@ class UserTravelAPIView(APIView):
                 'msg': '数据不存在',
                 'success': False
             }, status.HTTP_200_OK)
-        user_travel.delete()
+        user_travel.is_delete = True
+        user_travel.save()
         return Response({
             'msg': '删除用户轨迹成功',
             'success': True,

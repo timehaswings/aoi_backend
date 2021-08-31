@@ -6,6 +6,8 @@
 # @FileName: serializers.py
 from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
+from rest_framework.validators import UniqueValidator
+
 from core.models import Tags, Category, BaseVideo, \
     Comment, Config, UserTravel, Deeds, Discover
 from rest_framework import serializers
@@ -29,6 +31,11 @@ class SiteSerializer(serializers.ModelSerializer):
 
 
 class TagsSerializer(serializers.ModelSerializer):
+    name = serializers.CharField(
+        max_length=50,
+        allow_blank=False,
+        trim_whitespace=True,
+        validators=[UniqueValidator(queryset=Tags.objects.all())])
     create_time = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S')
     update_time = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S')
 
@@ -79,6 +86,7 @@ class ConfigSerializer(serializers.ModelSerializer):
     class Meta:
         model = Config
         fields = '__all__'
+        extra_kwargs = {'is_delete': {'write_only': True}}
         read_only_fields = ['create_time']
 
 
@@ -88,6 +96,7 @@ class UserTravelSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserTravel
         fields = '__all__'
+        extra_kwargs = {'is_delete': {'write_only': True}}
         read_only_fields = ['create_time']
 
 
@@ -97,6 +106,7 @@ class DeedsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Deeds
         fields = '__all__'
+        extra_kwargs = {'is_delete': {'write_only': True}}
         read_only_fields = ['create_time']
 
 

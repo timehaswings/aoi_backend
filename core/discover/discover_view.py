@@ -4,10 +4,6 @@
 # @Time    : 2021/8/28 8:56
 # @Author  : NoWords
 # @FileName: discover_view.py
-from django.utils.decorators import method_decorator
-from django.views.decorators.cache import cache_page
-from django.views.decorators.vary import vary_on_headers
-
 from ..serializers import DiscoverSerializer
 from ..models import Discover
 from rest_framework.views import APIView
@@ -23,8 +19,6 @@ class DiscoverAPIView(APIView):
     发现管理
     """
 
-    @method_decorator(cache_page(60))
-    @method_decorator(vary_on_headers("Authorization", ))
     def get(self, request, *args, **kwargs):
         """
         获取发现列表
@@ -41,7 +35,7 @@ class DiscoverAPIView(APIView):
         name = data.get('name')
         content = data.get('content')
         sort = data.get('sort')
-        filters = {'is_delete': 0}
+        filters = {'is_delete': False}
         if discover_id:
             filters['id'] = discover_id
         if name:
@@ -143,7 +137,8 @@ class DiscoverAPIView(APIView):
                 'msg': '数据不存在',
                 'success': False
             }, status.HTTP_200_OK)
-        discover.delete()
+        discover.is_delete = True
+        discover.save()
         return Response({
             'msg': '删除发现成功',
             'success': True,

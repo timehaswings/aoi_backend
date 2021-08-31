@@ -4,9 +4,6 @@
 # @Time    : 2021/8/24 15:06
 # @Author  : NoWords
 # @FileName: config_view.py
-from django.utils.decorators import method_decorator
-from django.views.decorators.cache import cache_page
-from django.views.decorators.vary import vary_on_headers
 from core.models import Config
 from core.serializers import ConfigSerializer
 from rest_framework.views import APIView
@@ -22,8 +19,6 @@ class ConfigAPIView(APIView):
     配置管理视图
     """
 
-    @method_decorator(cache_page(60))
-    @method_decorator(vary_on_headers("Authorization", ))
     def get(self, request, format=None):
         """
         查询数据视图
@@ -36,7 +31,7 @@ class ConfigAPIView(APIView):
         page_no = data.get('pageNo')
         codename = data.get('codename')
         config_id = data.get('id')
-        filters = {}
+        filters = {'is_delete': False}
         if config_id:
             filters['id'] = config_id
         if codename:
@@ -131,7 +126,8 @@ class ConfigAPIView(APIView):
                 'msg': '数据不存在',
                 'success': False
             }, status.HTTP_200_OK)
-        config.delete()
+        config.is_delete = True
+        config.save()
         return Response({
             'msg': '删除成功',
             'success': ConfigSerializer(config).data

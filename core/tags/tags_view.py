@@ -4,10 +4,6 @@
 # @Time    : 2021/8/25 10:04
 # @Author  : NoWords
 # @FileName: tags_view.py
-from django.utils.decorators import method_decorator
-from django.views.decorators.cache import cache_page
-from django.views.decorators.vary import vary_on_headers
-
 from ..serializers import TagsSerializer
 from ..models import Tags
 from rest_framework.views import APIView
@@ -23,8 +19,6 @@ class TagsAPIView(APIView):
     标签管理
     """
 
-    @method_decorator(cache_page(60))
-    @method_decorator(vary_on_headers("Authorization", ))
     def get(self, request, *args, **kwargs):
         """
         获取标签列表
@@ -34,7 +28,7 @@ class TagsAPIView(APIView):
         :return: 
         """
         data = request.GET
-        filters = {}
+        filters = {'is_delete': False}
         page_size = data.get('pageSize')
         page_no = data.get('pageNo')
         tags_id = data.get('id')
@@ -140,7 +134,8 @@ class TagsAPIView(APIView):
                 'msg': '数据不存在',
                 'success': False
             }, status.HTTP_200_OK)
-        tags.delete()
+        tags.is_delete = True
+        tags.save()
         return Response({
             'msg': '删除标签成功',
             'success': True,

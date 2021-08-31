@@ -38,7 +38,7 @@ class CommentAPIView(APIView):
         page_no = data.get('pageNo')
         comment_id = data.get('id')
         content = data.get('content')
-        filters = {'is_delete': 0}
+        filters = {'is_delete': False}
         if comment_id:
             filters['id'] = comment_id
         if content:
@@ -128,7 +128,8 @@ class CommentAPIView(APIView):
                 'msg': '数据不存在',
                 'success': False
             }, status.HTTP_200_OK)
-        comment.delete()
+        comment.is_delete = True
+        comment.save()
         return Response({
             'msg': '删除评论成功',
             'success': True,

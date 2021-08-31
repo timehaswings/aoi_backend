@@ -4,10 +4,6 @@
 # @Time    : 2021/8/26 12:59
 # @Author  : NoWords
 # @FileName: deeds_view.py
-from django.utils.decorators import method_decorator
-from django.views.decorators.cache import cache_page
-from django.views.decorators.vary import vary_on_headers
-
 from ..serializers import DeedsSerializer
 from ..models import Deeds
 from rest_framework.views import APIView
@@ -23,8 +19,6 @@ class DeedsAPIView(APIView):
     活动管理
     """
 
-    @method_decorator(cache_page(60))
-    @method_decorator(vary_on_headers("Authorization", ))
     def get(self, request, *args, **kwargs):
         """
         获取活动列表
@@ -40,7 +34,7 @@ class DeedsAPIView(APIView):
         title = data.get('title')
         content = data.get('content')
         sort = data.get('sort')
-        filters = {'is_delete': 0}
+        filters = {'is_delete': False}
         if deeds_id:
             filters['id'] = deeds_id
         if title:
@@ -140,7 +134,8 @@ class DeedsAPIView(APIView):
                 'msg': '数据不存在',
                 'success': False
             }, status.HTTP_200_OK)
-        deeds.delete()
+        deeds.is_delete = True
+        deeds.save()
         return Response({
             'msg': '删除活动成功',
             'success': True,
