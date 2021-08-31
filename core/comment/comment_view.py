@@ -4,10 +4,6 @@
 # @Time    : 2021/8/26 11:38
 # @Author  : NoWords
 # @FileName: comment_view.py
-from django.utils.decorators import method_decorator
-from django.views.decorators.cache import cache_page
-from django.views.decorators.vary import vary_on_headers
-
 from ..serializers import CommentSerializer
 from ..models import Comment
 from rest_framework.views import APIView
@@ -23,8 +19,6 @@ class CommentAPIView(APIView):
     评论管理
     """
 
-    @method_decorator(cache_page(60))
-    @method_decorator(vary_on_headers("Authorization", ))
     def get(self, request, *args, **kwargs):
         """
         获取评论列表

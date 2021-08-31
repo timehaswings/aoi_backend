@@ -47,6 +47,11 @@ class TagsSerializer(serializers.ModelSerializer):
 
 
 class CategorySerializer(serializers.ModelSerializer):
+    name = serializers.CharField(
+        max_length=50,
+        allow_blank=False,
+        trim_whitespace=True,
+        validators=[UniqueValidator(queryset=Tags.objects.all())])
     create_time = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S')
     update_time = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S')
 
@@ -58,6 +63,10 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 class BaseVideoSerializer(serializers.ModelSerializer):
+    name = serializers.CharField(
+        max_length=200,
+        allow_blank=False,
+        trim_whitespace=True)
     create_time = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S')
     update_time = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S')
     release_time = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S')
@@ -80,6 +89,14 @@ class CommentSerializer(serializers.ModelSerializer):
 
 
 class ConfigSerializer(serializers.ModelSerializer):
+    name = serializers.CharField(
+        max_length=80,
+        allow_blank=False,
+        trim_whitespace=True)
+    codename = serializers.CharField(
+        max_length=40,
+        allow_blank=False,
+        trim_whitespace=True)
     create_time = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S')
     update_time = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S')
 
@@ -101,6 +118,10 @@ class UserTravelSerializer(serializers.ModelSerializer):
 
 
 class DeedsSerializer(serializers.ModelSerializer):
+    title = serializers.CharField(
+        max_length=80,
+        allow_blank=False,
+        trim_whitespace=True)
     create_time = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S')
 
     class Meta:
@@ -111,6 +132,10 @@ class DeedsSerializer(serializers.ModelSerializer):
 
 
 class DiscoverSerializer(serializers.ModelSerializer):
+    name = serializers.CharField(
+        max_length=50,
+        allow_blank=False,
+        trim_whitespace=True)
     create_time = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S')
     update_time = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S')
 

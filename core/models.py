@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 # 标签管理表
 class Tags(models.Model):
     id = models.AutoField(primary_key=True, verbose_name='自增id')
-    name = models.CharField(max_length=50, unique=True, verbose_name='标签名称')
+    name = models.CharField(max_length=50, verbose_name='标签名称')
     desc = models.CharField(max_length=300, null=True, blank=True, verbose_name='标签描述')
     sort = models.IntegerField(default=100, verbose_name='排序前后')
     is_active = models.BooleanField(default=1, verbose_name='是否启用')
@@ -28,7 +28,7 @@ class Tags(models.Model):
 # 分类管理表
 class Category(models.Model):
     id = models.AutoField(primary_key=True, verbose_name='自增id')
-    name = models.CharField(max_length=50, unique=True, verbose_name='分类名称')
+    name = models.CharField(max_length=50, verbose_name='分类名称')
     desc = models.CharField(max_length=300, null=True, blank=True, verbose_name='分类描述')
     is_active = models.BooleanField(default=1, verbose_name='是否启用')
     sort = models.IntegerField(default=100, verbose_name='排序前后')
@@ -122,7 +122,7 @@ class Config(models.Model):
     module = models.CharField(max_length=80, verbose_name='所属模块')
     name = models.CharField(max_length=80, verbose_name='变量名称')
     desc = models.CharField(max_length=80, verbose_name='变量描述')
-    codename = models.CharField(max_length=40, unique=True, verbose_name='key')
+    codename = models.CharField(max_length=40, verbose_name='key')
     value = models.CharField(max_length=255, verbose_name='变量value')
     create_id = models.IntegerField(verbose_name='创建人ID')
     create_name = models.CharField(max_length=10, verbose_name='创建姓名')
@@ -151,7 +151,7 @@ class UserTravel(models.Model):
         ('spend', '花钱'),
     )
     id = models.AutoField(primary_key=True, verbose_name='自增id')
-    user = models.ForeignKey(User, on_delete=models.DO_NOTHING, verbose_name='视频')
+    user = models.ForeignKey(User, on_delete=models.DO_NOTHING, verbose_name='用户')
     video = models.ForeignKey(BaseVideo, blank=True, null=True, on_delete=models.DO_NOTHING, verbose_name='视频')
     discover = models.ForeignKey(Discover, blank=True, null=True, on_delete=models.DO_NOTHING, verbose_name='发现')
     operation = models.CharField(max_length=20, choices=OPERATION_CHOICES, verbose_name='操作类型')
