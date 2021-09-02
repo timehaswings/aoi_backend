@@ -54,6 +54,28 @@ class FileUploadView(APIView):
             'data': files_address
         }, status.HTTP_200_OK)
 
+    def delete(self, request, format=None):
+        """
+        移除指定文件
+        :param request:
+        :param format:
+        :return:
+        """
+        data = request.GET
+        file_path = data.get('path')
+        if not file_path:
+            return Response({
+                'msg': '文件路径缺失',
+                'success': False
+            }, status.HTTP_200_OK)
+        file_absolute_path = os.path.join(MEDIA_ROOT, file_path)
+        if os.path.exists(file_absolute_path):
+            os.remove(file_absolute_path)
+        return Response({
+            'msg': '文件删除成功',
+            'success': True
+        }, status.HTTP_200_OK)
+
 
 class VideoUploadView(APIView):
     parser_classes = (MultiPartParser,)
@@ -90,4 +112,26 @@ class VideoUploadView(APIView):
             'msg': '上传成功',
             'success': True,
             'data': files_address
+        }, status.HTTP_200_OK)
+
+    def delete(self, request, format=None):
+        """
+        移除指定文件
+        :param request:
+        :param format:
+        :return:
+        """
+        data = request.GET
+        video_path = data.get('path')
+        if not video_path:
+            return Response({
+                'msg': '视频路径缺失',
+                'success': False
+            }, status.HTTP_200_OK)
+        video_absolute_path = os.path.join(VIDEO_STORAGE_PATH, video_path)
+        if os.path.exists(video_absolute_path):
+            os.remove(video_absolute_path)
+        return Response({
+            'msg': '视频删除成功',
+            'success': True
         }, status.HTTP_200_OK)

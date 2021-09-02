@@ -5,9 +5,6 @@
 # @Author  : NoWords
 # @FileName: site_view.py
 from django.contrib.sites.models import Site
-from django.utils.decorators import method_decorator
-from django.views.decorators.cache import cache_page
-from django.views.decorators.vary import vary_on_headers
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -22,9 +19,6 @@ class SiteAPIView(APIView):
     """
     站点管理视图
     """
-
-    @method_decorator(cache_page(60))
-    @method_decorator(vary_on_headers("Authorization", ))
     def get(self, request, format=None):
         """
         查询数据视图

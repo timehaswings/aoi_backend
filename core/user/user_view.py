@@ -5,9 +5,6 @@
 # @Author  : NoWords
 # @FileName: user_view.py
 from django.contrib.auth.models import User
-from django.utils.decorators import method_decorator
-from django.views.decorators.cache import cache_page
-from django.views.decorators.vary import vary_on_headers
 
 from ..serializers import UserSerializer
 from rest_framework.views import APIView
@@ -22,9 +19,6 @@ class UserAPIView(APIView):
     """
     用户管理视图
     """
-
-    @method_decorator(cache_page(60))
-    @method_decorator(vary_on_headers("Authorization", ))
     def get(self, request, *args, **kwargs):
         """
         获取用户列表
@@ -84,19 +78,28 @@ class UserAPIView(APIView):
         :return:
         """
         data = request.data
-        serializer = UserSerializer(data=data)
-        try:
-            serializer.is_valid(raise_exception=True)
-            serializer.save()
-        except Exception as e:
-            logger.error('error: %s' % e)
+        email = data.get('email')
+        password = data.get('password')
+        if not email or not password:
             return Response({
-                'msg': '添加失败：%s' % e,
+                'msg': '必须存在邮箱和密码',
                 'success': False
             }, status.HTTP_200_OK)
+        username = email.split('@')[0]
+        user = User.objects.filter(username=username).first()
+        if user:
+            if user.email == email:
+                return Response({
+                    'msg': '当前邮箱已被注册',
+                    'success': False
+                }, status.HTTP_200_OK)
+            else:
+                username = username + '~'
+        user = User.objects.create_user(username=username, password=password, email=email)
         return Response({
             'msg': '添加成功',
-            'success': True
+            'success': True,
+            'data': UserSerializer(user).data
         }, status.HTTP_200_OK)
 
     def put(self, request, *args, **kwargs):
