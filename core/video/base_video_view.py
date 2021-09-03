@@ -5,8 +5,8 @@
 # @Author  : NoWords
 # @FileName: base_video_view.py
 from rest_framework.views import APIView
-from core.models import BaseVideo, Tags, Category
-from core.serializers import BaseVideoSerializer, TagsSerializer, CategorySerializer
+from core.models import BaseVideo
+from core.serializers import BaseVideoSerializer
 from rest_framework.response import Response
 from rest_framework import status
 import uuid
@@ -50,11 +50,6 @@ class BaseVideoAPIView(APIView):
             rows = BaseVideo.objects.filter(**filters).order_by(*sort_list)
         total = rows.count()
         rows = BaseVideoSerializer(rows, many=True).data
-        for row in rows:
-            tags = Tags.objects.filter(id__in=row.get('tags'))
-            category = Category.objects.filter(id=row.get('category')).first()
-            row['tags'] = TagsSerializer(tags, many=True).data
-            row['category'] = CategorySerializer(category).data
         result = {
             'msg': '获取成功',
             'success': True,
@@ -78,7 +73,7 @@ class BaseVideoAPIView(APIView):
         data['create_name'] = request.user.username
         data['updater_name'] = data['create_name']
         data['guid'] = str(uuid.uuid1().int)
-        serializer = BaseVideoSerializer(data=data)
+        serializer = BaseVideoSerializer(data=data, partial=True)
         try:
             serializer.is_valid(raise_exception=True)
             serializer.save()

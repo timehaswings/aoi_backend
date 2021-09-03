@@ -64,7 +64,7 @@ class ConfigAPIView(APIView):
         data['updater_id'] = data['create_id']
         data['create_name'] = request.user.username
         data['updater_name'] = data['create_name']
-        serializer = ConfigSerializer(data=data)
+        serializer = ConfigSerializer(data=data, partial=True)
         try:
             serializer.is_valid(raise_exception=True)
             serializer.save()

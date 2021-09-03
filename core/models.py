@@ -53,7 +53,7 @@ class BaseVideo(models.Model):
     name = models.CharField(max_length=200, verbose_name='视频名称')
     desc = models.CharField(blank=True, max_length=500, verbose_name='视频描述')
     artists = models.CharField(default='', max_length=200, verbose_name='演员')
-    release_time = models.DateTimeField(null=True, verbose_name='上映时间')
+    release_time = models.DateField(null=True, verbose_name='上映时间')
     m3u8_url = models.CharField(max_length=300, verbose_name='视频地址')
     thumb_url = models.CharField(max_length=300, verbose_name='缩略图')
     sort = models.IntegerField(default=100, verbose_name='排序前后')

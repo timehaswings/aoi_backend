@@ -44,7 +44,7 @@ class TagsSerializer(serializers.ModelSerializer):
         model = Tags
         fields = '__all__'
         extra_kwargs = {'is_delete': {'write_only': True}}
-        read_only_fields = ['create_time', 'update_time']
+        read_only_fields = ['create_time']
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -60,7 +60,7 @@ class CategorySerializer(serializers.ModelSerializer):
         model = Category
         fields = '__all__'
         extra_kwargs = {'is_delete': {'write_only': True}}
-        read_only_fields = ['create_time', 'update_time']
+        read_only_fields = ['create_time']
 
 
 class BaseVideoSerializer(serializers.ModelSerializer):
@@ -70,13 +70,34 @@ class BaseVideoSerializer(serializers.ModelSerializer):
         trim_whitespace=True)
     create_time = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S')
     update_time = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S')
-    release_time = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S')
+    release_time = serializers.DateField(format='%Y-%m-%d')
+    category_obj = CategorySerializer(source="category", read_only=True)
+    tags_list = TagsSerializer(source="tags", read_only=True, many=True)
 
     class Meta:
         model = BaseVideo
         fields = '__all__'
+        extra_kwargs = {
+            'is_delete': {'write_only': True},
+            'category': {'write_only': True},
+            'tags': {'write_only': True},
+        }
+        read_only_fields = ['create_time']
+
+
+class DiscoverSerializer(serializers.ModelSerializer):
+    name = serializers.CharField(
+        max_length=50,
+        allow_blank=False,
+        trim_whitespace=True)
+    create_time = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S')
+    update_time = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S')
+
+    class Meta:
+        model = Discover
+        fields = '__all__'
         extra_kwargs = {'is_delete': {'write_only': True}}
-        read_only_fields = ['create_time', 'update_time']
+        read_only_fields = ['create_time']
 
 
 class CommentSerializer(serializers.ModelSerializer):
@@ -110,11 +131,17 @@ class ConfigSerializer(serializers.ModelSerializer):
 
 class UserTravelSerializer(serializers.ModelSerializer):
     create_time = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S')
+    video_obj = BaseVideoSerializer(source="video", read_only=True)
+    discover_obj = DiscoverSerializer(source="discover", read_only=True)
 
     class Meta:
         model = UserTravel
         fields = '__all__'
-        extra_kwargs = {'is_delete': {'write_only': True}}
+        extra_kwargs = {
+            'is_delete': {'write_only': True},
+            'video': {'write_only': True},
+            'discover': {'write_only': True}
+        }
         read_only_fields = ['create_time']
 
 
@@ -127,21 +154,6 @@ class DeedsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Deeds
-        fields = '__all__'
-        extra_kwargs = {'is_delete': {'write_only': True}}
-        read_only_fields = ['create_time']
-
-
-class DiscoverSerializer(serializers.ModelSerializer):
-    name = serializers.CharField(
-        max_length=50,
-        allow_blank=False,
-        trim_whitespace=True)
-    create_time = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S')
-    update_time = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S')
-
-    class Meta:
-        model = Discover
         fields = '__all__'
         extra_kwargs = {'is_delete': {'write_only': True}}
         read_only_fields = ['create_time']

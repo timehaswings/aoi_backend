@@ -62,7 +62,7 @@ class SiteAPIView(APIView):
         :return:
         """
         data = request.data
-        serializer = SiteSerializer(data=data)
+        serializer = SiteSerializer(data=data, partial=True)
         try:
             serializer.is_valid(raise_exception=True)
             serializer.save()
