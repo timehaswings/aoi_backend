@@ -4,6 +4,7 @@
 # @Time    : 2021/7/30 19:04
 # @Author  : NoWords
 # @FileName: user_view.py
+from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 
 from ..serializers import UserSerializer
@@ -118,6 +119,11 @@ class UserAPIView(APIView):
                 'msg': '数据不存在',
                 'success': False
             }, status.HTTP_200_OK)
+        if data.get('password'):
+            return Response({
+                'msg': '不可修改密码',
+                'success': False
+            }, status.HTTP_200_OK)
         serializer = UserSerializer(obj, data=data, partial=True)
         try:
             serializer.is_valid(raise_exception=True)
@@ -155,3 +161,37 @@ class UserAPIView(APIView):
             'success': True,
             'data': UserSerializer(user).data
         }, status.HTTP_200_OK)
+
+
+class PasswordAPIView(APIView):
+
+    def put(self, request, *args, **kwargs):
+        """
+        用户修改密码
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        """
+        data = request.data
+        username = data.get('username')
+        old_password = data.get('oldPassword')
+        new_password = data.get('newPassword')
+        if not username or not old_password or not new_password:
+            return Response({
+                'msg': '参数缺失',
+                'success': False
+            }, status.HTTP_200_OK)
+        user = authenticate(username=username, password=old_password)
+        if user is None:
+            return Response({
+                'msg': '用户原始密码错误',
+                'success': False
+            }, status.HTTP_200_OK)
+        user.set_password(new_password)
+        user.save()
+        return Response({
+            'msg': '修改密码成功',
+            'success': True
+        }, status.HTTP_200_OK)
+
