@@ -7,6 +7,7 @@
 from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
 from rest_framework.validators import UniqueValidator
+from aoi.settings import BASE_VIDEO_URL, BASE_THUMB_URL
 
 from core.models import Tags, Category, BaseVideo, \
     Comment, Config, UserTravel, Deeds, Discover
@@ -71,14 +72,24 @@ class BaseVideoSerializer(serializers.ModelSerializer):
     create_time = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S')
     update_time = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S')
     release_time = serializers.DateField(format='%Y-%m-%d')
+    m3u8 = serializers.SerializerMethodField(read_only=True)
+    thumb = serializers.SerializerMethodField(read_only=True)
     category_obj = CategorySerializer(source="category", read_only=True)
     tags_list = TagsSerializer(source="tags", read_only=True, many=True)
+
+    def get_m3u8(self, obj):
+        return '%s%s/index.m3u8' % (BASE_VIDEO_URL, obj.m3u8_path)
+
+    def get_thumb(self, obj):
+        return '%s%s/thumb-500.jpg' % (BASE_VIDEO_URL, obj.thumb_path)
 
     class Meta:
         model = BaseVideo
         fields = '__all__'
         extra_kwargs = {
             'is_delete': {'write_only': True},
+            'm3u8_path': {'write_only': True},
+            'thumb_path': {'write_only': True},
             'category': {'write_only': True},
             'tags': {'write_only': True},
         }
