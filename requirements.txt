@@ -10,8 +10,7 @@ django-cors-headers==3.7.0
 djangorestframework==3.12.2
 djangorestframework-camel-case==1.2.0
 djangorestframework-jwt==1.11.0
-djangorestframework-simplejwt==4.7.2
-mysqlclient==1.4.6
+djangorestframework-simplejwt==4.4.0
 requests==2.26.0
 pycparser==2.20
 PyJWT==1.7.1
