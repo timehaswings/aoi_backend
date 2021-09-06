@@ -40,6 +40,8 @@ class TagsSerializer(serializers.ModelSerializer):
         validators=[UniqueValidator(queryset=Tags.objects.all())])
     create_time = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S')
     update_time = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S')
+    create_name = serializers.CharField(max_length=40)
+    updater_name = serializers.CharField(max_length=40)
 
     class Meta:
         model = Tags
@@ -56,6 +58,8 @@ class CategorySerializer(serializers.ModelSerializer):
         validators=[UniqueValidator(queryset=Tags.objects.all())])
     create_time = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S')
     update_time = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S')
+    create_name = serializers.CharField(max_length=40)
+    updater_name = serializers.CharField(max_length=40)
 
     class Meta:
         model = Category
@@ -76,6 +80,8 @@ class BaseVideoSerializer(serializers.ModelSerializer):
     thumb = serializers.SerializerMethodField(read_only=True)
     category_obj = CategorySerializer(source="category", read_only=True)
     tags_list = TagsSerializer(source="tags", read_only=True, many=True)
+    create_name = serializers.CharField(max_length=40)
+    updater_name = serializers.CharField(max_length=40)
 
     def get_m3u8(self, obj):
         return '%s%s/index.m3u8' % (BASE_VIDEO_URL, obj.m3u8_path)
@@ -103,6 +109,8 @@ class DiscoverSerializer(serializers.ModelSerializer):
         trim_whitespace=True)
     create_time = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S')
     update_time = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S')
+    create_name = serializers.CharField(max_length=40)
+    updater_name = serializers.CharField(max_length=40)
 
     class Meta:
         model = Discover
@@ -113,6 +121,7 @@ class DiscoverSerializer(serializers.ModelSerializer):
 
 class CommentSerializer(serializers.ModelSerializer):
     create_time = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S')
+    create_name = serializers.CharField(max_length=40)
 
     class Meta:
         model = Comment
@@ -132,6 +141,8 @@ class ConfigSerializer(serializers.ModelSerializer):
         trim_whitespace=True)
     create_time = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S')
     update_time = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S')
+    create_name = serializers.CharField(max_length=40)
+    updater_name = serializers.CharField(max_length=40)
 
     class Meta:
         model = Config
@@ -162,6 +173,8 @@ class DeedsSerializer(serializers.ModelSerializer):
         allow_blank=False,
         trim_whitespace=True)
     create_time = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S')
+    create_name = serializers.CharField(max_length=40)
+    updater_name = serializers.CharField(max_length=40)
 
     class Meta:
         model = Deeds
