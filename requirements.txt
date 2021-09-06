@@ -1,6 +1,6 @@
 asgiref==3.4.1
 APScheduler==3.7.0
-charset-normalizer==2.0.3
+charset-normalizer==2.0.4
 channels==3.0.4
 daphne==3.0.2
 django==3.1.4
@@ -14,10 +14,12 @@ djangorestframework-simplejwt==4.4.0
 requests==2.26.0
 pycparser==2.20
 PyJWT==1.7.1
+mysqlclient==2.0.3
 PyMySQL==1.0.2
 pyOpenSSL==20.0.1
 pymysql==1.0.2
 urllib3==1.26.6
+chardet==4.0.0
 sqlparse==0.4.1
 six==1.16.0
 idna==3.2
