@@ -87,7 +87,7 @@ class BaseVideoSerializer(serializers.ModelSerializer):
         return '%s%s/index.m3u8' % (BASE_VIDEO_URL, obj.m3u8_path)
 
     def get_thumb(self, obj):
-        return '%s%s/thumb-500.jpg' % (BASE_VIDEO_URL, obj.thumb_path)
+        return '%s%s/thumb-500.jpg' % (BASE_THUMB_URL, obj.thumb_path)
 
     class Meta:
         model = BaseVideo
