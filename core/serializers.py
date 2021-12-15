@@ -12,6 +12,7 @@ from aoi.settings import BASE_VIDEO_URL, BASE_THUMB_URL
 from core.models import Tags, Category, BaseVideo, \
     Comment, Config, UserTravel, Deeds, Discover
 from rest_framework import serializers
+from rest_captcha.serializers import RestCaptchaSerializer
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -181,3 +182,11 @@ class DeedsSerializer(serializers.ModelSerializer):
         fields = '__all__'
         extra_kwargs = {'is_delete': {'write_only': True}}
         read_only_fields = ['create_time']
+
+
+class CaptchaSerializer(RestCaptchaSerializer):
+    def update(self, instance, validated_data):
+        pass
+
+    def create(self, validated_data):
+        pass

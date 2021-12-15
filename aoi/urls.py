@@ -14,14 +14,16 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, re_path
+from django.urls import re_path
 from django.conf.urls import include, url
 from rest_framework_jwt.views import obtain_jwt_token, refresh_jwt_token, verify_jwt_token
 
 urlpatterns = [
+    # 文档参考：https://jpadilla.github.io/django-rest-framework-jwt/
     url(r'^admin/', admin.site.urls),
     url(r'^api/v1/token/auth', obtain_jwt_token),
     url(r'^api/v1/token/refresh', refresh_jwt_token),
     url(r'^api/v1/token/verify', verify_jwt_token),
+    url(r'^api/v1/captcha', include('rest_captcha.urls')),
     re_path(r'^', include('core.urls'))
 ]

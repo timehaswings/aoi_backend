@@ -17,10 +17,12 @@ from core.travel.travel_view import UserTravelAPIView
 from core.user.user_view import UserAPIView
 from core.video.base_video_view import BaseVideoAPIView
 from core.upload.upload_view import FileUploadView, VideoUploadView
+from .views import RegisterAPIView
 from django.views.static import serve
 from aoi.settings import MEDIA_ROOT
 
 urlpatterns = [
+    path('api/v1/register', RegisterAPIView.as_view()),
     path('api/v1/site', SiteAPIView.as_view()),
     path('api/v1/user', UserAPIView.as_view()),
     path('api/v1/tags', TagsAPIView.as_view()),
