@@ -3,7 +3,7 @@ APScheduler==3.7.0
 charset-normalizer==2.0.4
 channels==3.0.4
 daphne==3.0.2
-django==3.1.4
+django==3.1.7
 django-allauth==0.44.0
 django-apscheduler==0.6.0
 django-cors-headers==3.7.0
@@ -16,7 +16,6 @@ PyJWT==1.7.1
 mysqlclient==2.0.3
 PyMySQL==1.0.2
 pyOpenSSL==20.0.1
-pymysql==1.0.2
 urllib3==1.26.6
 chardet==4.0.0
 sqlparse==0.4.1

@@ -32,7 +32,7 @@ class UserTravelAPIView(APIView):
         page_no = data.get('pageNo')
         user_travel_id = data.get('id')
         operation = data.get('operation')
-        filters = {'is_delete': False}
+        filters = {'is_delete': 0}
         if user_travel_id:
             filters['id'] = user_travel_id
         if operation:

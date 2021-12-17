@@ -31,7 +31,7 @@ class ConfigAPIView(APIView):
         page_no = data.get('pageNo')
         codename = data.get('codename')
         config_id = data.get('id')
-        filters = {'is_delete': False}
+        filters = {'is_delete': 0}
         if config_id:
             filters['id'] = config_id
         if codename:

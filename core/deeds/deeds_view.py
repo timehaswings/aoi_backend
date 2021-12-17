@@ -34,7 +34,7 @@ class DeedsAPIView(APIView):
         title = data.get('title')
         content = data.get('content')
         sort = data.get('sort')
-        filters = {'is_delete': False}
+        filters = {'is_delete': 0}
         if deeds_id:
             filters['id'] = deeds_id
         if title:

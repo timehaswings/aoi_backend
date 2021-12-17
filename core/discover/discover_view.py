@@ -35,7 +35,7 @@ class DiscoverAPIView(APIView):
         name = data.get('name')
         content = data.get('content')
         sort = data.get('sort')
-        filters = {'is_delete': False}
+        filters = {'is_delete': 0}
         if discover_id:
             filters['id'] = discover_id
         if name:

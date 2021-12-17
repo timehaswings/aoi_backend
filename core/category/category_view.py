@@ -28,7 +28,7 @@ class CategoryAPIView(APIView):
         :return:
         """
         data = request.GET
-        filters = {'is_delete': False}
+        filters = {'is_delete': 0}
         page_size = data.get('pageSize')
         page_no = data.get('pageNo')
         category_id = data.get('id')
@@ -39,8 +39,8 @@ class CategoryAPIView(APIView):
             filters['id'] = category_id
         if name:
             filters['name__contains'] = name
-        if is_active:
-            filters['is_active'] = is_active
+        if is_active is not None:
+            filters['is_active'] = 1 if is_active in ['true', 1] else 0
         if sort:
             sort_list = sort.split(',')
         else:

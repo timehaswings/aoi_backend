@@ -28,7 +28,7 @@ class TagsAPIView(APIView):
         :return: 
         """
         data = request.GET
-        filters = {'is_delete': False}
+        filters = {'is_delete': 0}
         page_size = data.get('pageSize')
         page_no = data.get('pageNo')
         tags_id = data.get('id')
