@@ -15,6 +15,10 @@ from core.tags.tags_view import TagsAPIView
 from core.site.site_view import SiteAPIView
 from core.travel.travel_view import UserTravelAPIView
 from core.user.user_view import UserAPIView
+from core.user.group_view import GroupAPIView
+from core.user.permission_view import PermissionAPIView
+from core.user.group_perm_view import GroupPermAPIView
+from core.user.user_group_view import UserGroupAPIView
 from core.video.base_video_view import BaseVideoAPIView
 from core.upload.upload_view import FileUploadView, VideoUploadView
 from .views import RegisterAPIView
@@ -25,6 +29,10 @@ urlpatterns = [
     path('api/v1/register', RegisterAPIView.as_view()),
     path('api/v1/site', SiteAPIView.as_view()),
     path('api/v1/user', UserAPIView.as_view()),
+    path('api/v1/group', GroupAPIView.as_view()),
+    path('api/v1/permission', PermissionAPIView.as_view()),
+    path('api/v1/group/permission', GroupPermAPIView.as_view()),
+    path('api/v1/user/group', UserGroupAPIView.as_view()),
     path('api/v1/tags', TagsAPIView.as_view()),
     path('api/v1/category', CategoryAPIView.as_view()),
     path('api/v1/config', ConfigAPIView.as_view()),
