@@ -86,16 +86,13 @@ class UserAPIView(APIView):
                 'msg': '必须存在邮箱和密码',
                 'success': False
             }, status.HTTP_200_OK)
-        username = email.split('@')[0]
-        user = User.objects.filter(username=username).first()
+        user = User.objects.filter(email=email).first()
         if user:
-            if user.email == email:
-                return Response({
-                    'msg': '当前邮箱已被注册',
-                    'success': False
-                }, status.HTTP_200_OK)
-            else:
-                username = username + '~'
+            return Response({
+                'msg': '当前邮箱已被注册',
+                'success': False
+            }, status.HTTP_200_OK)
+        username = email.split('@')[0]
         user = User.objects.create_user(username=username, password=password, email=email)
         return Response({
             'msg': '添加成功',

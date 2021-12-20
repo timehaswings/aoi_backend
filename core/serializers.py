@@ -4,7 +4,7 @@
 # @Time    : 2021/8/24 9:56
 # @Author  : NoWords
 # @FileName: serializers.py
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group, Permission
 from django.contrib.sites.models import Site
 from rest_framework.validators import UniqueValidator
 from aoi.settings import BASE_VIDEO_URL, BASE_THUMB_URL
@@ -12,12 +12,11 @@ from aoi.settings import BASE_VIDEO_URL, BASE_THUMB_URL
 from core.models import Tags, Category, BaseVideo, \
     Comment, Config, UserTravel, Deeds, Discover
 from rest_framework import serializers
-from rest_captcha.serializers import RestCaptchaSerializer
 
 
 class UserSerializer(serializers.ModelSerializer):
     date_joined = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S')
-    username = serializers.EmailField()
+    email = serializers.EmailField()
 
     class Meta:
         model = User
@@ -27,7 +26,6 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class SiteSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Site
         fields = '__all__'
@@ -184,9 +182,13 @@ class DeedsSerializer(serializers.ModelSerializer):
         read_only_fields = ['create_time']
 
 
-class CaptchaSerializer(RestCaptchaSerializer):
-    def update(self, instance, validated_data):
-        pass
+class PermissionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Permission
+        fields = '__all__'
 
-    def create(self, validated_data):
-        pass
+
+class GroupSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Group
+        fields = '__all__'
