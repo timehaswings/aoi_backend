@@ -130,5 +130,5 @@ dmypy.json
 
 # django
 aoi/settings.py
-log/
+log/*.log
 media/
