@@ -14,7 +14,7 @@ from core.discover.discover_view import DiscoverAPIView
 from core.tags.tags_view import TagsAPIView
 from core.site.site_view import SiteAPIView
 from core.travel.travel_view import UserTravelAPIView
-from core.user.user_view import UserAPIView
+from core.user.user_view import UserAPIView, PasswordAPIView
 from core.user.group_view import GroupAPIView
 from core.user.permission_view import PermissionAPIView
 from core.user.group_perm_view import GroupPermAPIView
@@ -30,8 +30,9 @@ urlpatterns = [
     path('api/v1/register', RegisterAPIView.as_view()),
     path('api/v1/site', SiteAPIView.as_view()),
     path('api/v1/user', UserAPIView.as_view()),
+    path('api/v1/password', UserAPIView.as_view()),
     path('api/v1/group', GroupAPIView.as_view()),
-    path('api/v1/permission', PermissionAPIView.as_view()),
+    path('api/v1/permission', PasswordAPIView.as_view()),
     path('api/v1/group/permission', GroupPermAPIView.as_view()),
     path('api/v1/user/group', UserGroupAPIView.as_view()),
     path('api/v1/tags', TagsAPIView.as_view()),

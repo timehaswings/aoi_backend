@@ -17,7 +17,7 @@ def recursion_menu(menus, menu):
         return
     for sub_menu in menus:
         if sub_menu['parent_id'] == menu['id']:
-            if 'children' in menu:
+            if 'children' in menu.keys():
                 menu['children'].append(sub_menu)
             else:
                 menu['children'] = [sub_menu]

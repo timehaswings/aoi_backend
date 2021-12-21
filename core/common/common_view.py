@@ -27,6 +27,13 @@ class CommonAPIView(APIView):
     add_insert_creator = False
     update_insert_updater = False
 
+    @staticmethod
+    def not_implements():
+        return Response({
+            'msg': '该接口未实现',
+            'success': False
+        }, status.HTTP_404_NOT_FOUND)
+
     def check_model(self):
         """
         模型检查
@@ -173,7 +180,7 @@ class CommonAPIView(APIView):
                 'msg': '数据id缺失',
                 'success': False
             }, status.HTTP_200_OK)
-        if 'is_delete' in self.filters:
+        if self.filters and 'is_delete' in self.filters.keys():
             self.model.objects.filter(id=data_id).update(is_delete=True)
         else:
             self.model.objects.filter(id=data_id).delete()

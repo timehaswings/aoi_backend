@@ -19,6 +19,12 @@ logger = logging.getLogger(__name__)
 class GroupPermAPIView(APIView):
 
     def get(self, request, format=None):
+        """
+        获取组别拥有的权限
+        :param request:
+        :param format:
+        :return:
+        """
         data = request.GET
         group_id = data.get('groupId')
         group = Group.objects.filter(id=group_id).first()
@@ -29,7 +35,7 @@ class GroupPermAPIView(APIView):
             }, status.HTTP_200_OK)
         permissions = Permission.objects.filter(id__in=group.permissions.all())
         result = {
-            'msg': '设置成功',
+            'msg': '获取成功',
             'success': True,
             'data': PermissionSerializer(permissions, many=True).data,
         }
