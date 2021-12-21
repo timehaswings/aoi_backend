@@ -94,9 +94,7 @@ class BaseVideoSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'is_delete': {'write_only': True},
             'm3u8_path': {'write_only': True},
-            'thumb_path': {'write_only': True},
-            'category': {'write_only': True},
-            'tags': {'write_only': True},
+            'thumb_path': {'write_only': True}
         }
         read_only_fields = ['create_time']
 
