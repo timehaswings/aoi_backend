@@ -10,7 +10,7 @@ from rest_framework.validators import UniqueValidator
 from aoi.settings import BASE_VIDEO_URL, BASE_THUMB_URL
 
 from core.models import Tags, Category, BaseVideo, \
-    Comment, Config, UserTravel, Deeds, Discover
+    Comment, Config, UserTravel, Deeds, Discover, Menu
 from rest_framework import serializers
 
 
@@ -192,3 +192,14 @@ class GroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = Group
         fields = '__all__'
+
+
+class MenuSerializer(serializers.ModelSerializer):
+    create_time = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S')
+    update_time = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S')
+
+    class Meta:
+        model = Menu
+        fields = '__all__'
+        extra_kwargs = {'is_delete': {'write_only': True}}
+        read_only_fields = ['create_time']

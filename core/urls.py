@@ -20,6 +20,7 @@ from core.user.permission_view import PermissionAPIView
 from core.user.group_perm_view import GroupPermAPIView
 from core.user.user_group_view import UserGroupAPIView
 from core.video.base_video_view import BaseVideoAPIView
+from core.menu.menu_view import MenuAPIView
 from core.upload.upload_view import FileUploadView, VideoUploadView
 from .views import RegisterAPIView
 from django.views.static import serve
@@ -40,6 +41,7 @@ urlpatterns = [
     path('api/v1/comment', CommentAPIView.as_view()),
     path('api/v1/deeds', DeedsAPIView.as_view()),
     path('api/v1/discover', DiscoverAPIView.as_view()),
+    path('api/v1/menu', MenuAPIView.as_view()),
     path('api/v1/user/travel', UserTravelAPIView.as_view()),
     path('api/v1/upload/file', FileUploadView.as_view()),
     path('api/v1/upload/video', VideoUploadView.as_view()),
