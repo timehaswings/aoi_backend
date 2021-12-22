@@ -107,8 +107,9 @@ class CommonAPIView(APIView):
         data = request.data
         if self.add_insert_creator:
             data['create_id'] = request.user.id
-            data['updater_id'] = request.user.id
             data['create_name'] = request.user.username
+        if self.update_insert_updater:
+            data['updater_id'] = request.user.id
             data['updater_name'] = request.user.username
         serializer = self.serializer(data=data, partial=True)
         try:
