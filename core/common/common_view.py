@@ -17,25 +17,29 @@ class CommonAPIView(APIView):
     基础视图
     """
 
-    model_name = None
-    serializer_name = None
+    model = None
+    serializer = None
     filters = {'is_delete': 0}
     page_size_field = 'pageSize'
     page_no_field = 'pageNo'
     # eg: [{'filter_key': 'name__contains', 'request_key': 'name'}]
     query = None
-    sort_list = ['-id']
-    # eg: {'db_field': 'value'}
-    add_extra_data = None
-    # eg: {'db_field': 'value'}
-    update_extra_data = None
+    add_insert_creator = False
+    update_insert_updater = False
+
+    @staticmethod
+    def not_implements():
+        return Response({
+            'msg': '该接口未实现',
+            'success': False
+        }, status.HTTP_404_NOT_FOUND)
 
     def check_model(self):
         """
         模型检查
         :return:
         """
-        if not self.model_name:
+        if not self.model:
             return Response({
                 'msg': '该视图未配置模型',
                 'success': False
@@ -46,17 +50,11 @@ class CommonAPIView(APIView):
         序列化器检查
         :return:
         """
-        if not self.serializer_name:
+        if not self.serializer:
             return Response({
                 'msg': '该视图未配置序列化器',
                 'success': False
             }, status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-    def set_add_extra_data(self, data):
-        self.add_extra_data = data
-
-    def set_update_extra_data(self, data):
-        self.update_extra_data = data
 
     def get(self, request, *args, **kwargs):
         """
@@ -80,20 +78,21 @@ class CommonAPIView(APIView):
             for param in self.query:
                 if data.get(param['request_key']):
                     filters[param['filter_key']] = data.get(param['request_key'])
-        if self.sort_list:
-            sort_list = self.sort_list
+        sort = data.get('sort')
+        if sort:
+            sort_list = sort.split(',')
         else:
-            sort_list = []
+            sort_list = ['-id']
         if page_size and page_no:
             start = (int(page_no) - 1) * int(page_size)
             end = start + int(page_size)
-            rows = globals()[self.model_name].objects.filter(**filters).order_by(*sort_list)[start:end]
+            rows = self.model.objects.filter(**filters).order_by(*sort_list)[start:end]
         else:
-            rows = globals()[self.model_name].objects.filter(**filters).order_by(*sort_list)
+            rows = self.model.objects.filter(**filters).order_by(*sort_list)
         return Response({
-            'msg': '获取成功',
+            'msg': '获取数据成功',
             'success': True,
-            'data': {'rows': globals()[self.serializer_name](rows, many=True).data, 'total': rows.count()}
+            'data': {'rows': self.serializer(rows, many=True).data, 'total': rows.count()}
         }, status.HTTP_200_OK)
 
     def post(self, request, *args, **kwargs):
@@ -106,9 +105,12 @@ class CommonAPIView(APIView):
         """
         self.check_serializer()
         data = request.data
-        if self.add_extra_data:
-            data = {**data, **self.add_extra_data}
-        serializer = globals()[self.serializer_name](data=data, partial=True)
+        if self.add_insert_creator:
+            data['create_id'] = request.user.id
+            data['updater_id'] = request.user.id
+            data['create_name'] = request.user.username
+            data['updater_name'] = request.user.username
+        serializer = self.serializer(data=data, partial=True)
         try:
             serializer.is_valid(raise_exception=True)
             serializer.save()
@@ -133,21 +135,22 @@ class CommonAPIView(APIView):
         """
         self.check_serializer()
         data = request.data
-        if self.update_extra_data:
-            data = {**data, **self.update_extra_data}
+        if self.update_insert_updater:
+            data['updater_id'] = request.user.id
+            data['updater_name'] = request.user.username
         data_id = data.get('id')
         if not data_id:
             return Response({
                 'msg': '数据id缺失',
                 'success': False
             }, status.HTTP_200_OK)
-        row = globals()[self.model_name].objects.filter(id=data_id).first()
+        row = self.model.objects.filter(id=data_id).first()
         if not row:
             return Response({
                 'msg': '修改失败，数据不存在',
                 'success': False
             }, status.HTTP_200_OK)
-        serializer = globals()[self.serializer_name](row, data=data, partial=True)
+        serializer = self.serializer(row, data=data, partial=True)
         try:
             serializer.is_valid(raise_exception=True)
             serializer.save()
@@ -177,10 +180,10 @@ class CommonAPIView(APIView):
                 'msg': '数据id缺失',
                 'success': False
             }, status.HTTP_200_OK)
-        if 'is_delete' in self.filters:
-            globals()[self.model_name].objects.filter(id=data_id).update(is_delete=True)
+        if self.filters and 'is_delete' in self.filters.keys():
+            self.model.objects.filter(id=data_id).update(is_delete=True)
         else:
-            globals()[self.model_name].objects.filter(id=data_id).delete()
+            self.model.objects.filter(id=data_id).delete()
         return Response({
             'msg': '删除数据成功',
             'success': True,

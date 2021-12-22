@@ -19,6 +19,12 @@ logger = logging.getLogger(__name__)
 class UserGroupAPIView(APIView):
 
     def get(self, request, format=None):
+        """
+        获取用户所属组别
+        :param request:
+        :param format:
+        :return:
+        """
         data = request.GET
         user_id = data.get('userId')
         user = User.objects.filter(id=user_id).first()
@@ -37,7 +43,7 @@ class UserGroupAPIView(APIView):
 
     def post(self, request, format=None):
         """
-        为组别添加权限
+        为用户添加组别
         :param request:
         :param format:
         :return:
@@ -59,7 +65,7 @@ class UserGroupAPIView(APIView):
             groups = []
             user.groups.clear()
         result = {
-            'msg': '设置成功',
+            'msg': '获取成功',
             'success': True,
             'data': GroupSerializer(groups, many=True).data,
         }
