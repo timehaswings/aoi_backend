@@ -48,13 +48,15 @@ class RegisterAPIView(APIView):
                 'msg': '该账户已存在',
                 'success': False
             }, status.HTTP_200_OK)
-        if '@' in username:
-            email = username
-            username = email.split('@')[0]
-        else:
-            email = 'unknown@unknown.com'
+        if '@' not in username:
+            return Response({
+                'msg': '邮箱格式错误',
+                'success': False
+            }, status.HTTP_200_OK)
+        email = username
+        username = email.split('@')[0]
         user = User.objects.create_user(username=username, password=password, email=email)
-        # 创建token
+        # 创建token，注册即登录
         jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
         jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
         payload = jwt_payload_handler(user)
