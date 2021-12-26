@@ -16,5 +16,6 @@ class GroupAPIView(CommonAPIView):
     filters = None
     query = [
         {'filter_key': 'id', 'request_key': 'id'},
+        {'filter_key': 'name__contains', 'request_key': 'name'},
     ]
 

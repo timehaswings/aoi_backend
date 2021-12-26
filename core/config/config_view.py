@@ -20,5 +20,6 @@ class ConfigAPIView(CommonAPIView):
     update_insert_updater = True
     query = [
         {'filter_key': 'id', 'request_key': 'id'},
+        {'filter_key': 'name__contains', 'request_key': 'name'},
         {'filter_key': 'codename', 'request_key': 'codename'},
     ]
