@@ -19,6 +19,7 @@ from core.user.group_view import GroupAPIView
 from core.user.permission_view import PermissionAPIView
 from core.user.group_perm_view import GroupPermAPIView
 from core.user.user_group_view import UserGroupAPIView
+from core.user.group_menu_view import GroupMenuAPIView, UserMenuAPIView
 from core.video.base_video_view import BaseVideoAPIView
 from core.menu.menu_view import MenuAPIView
 from core.upload.upload_view import FileUploadView, VideoUploadView
@@ -34,6 +35,8 @@ urlpatterns = [
     path('api/v1/group', GroupAPIView.as_view()),
     path('api/v1/permission', PasswordAPIView.as_view()),
     path('api/v1/group/permission', GroupPermAPIView.as_view()),
+    path('api/v1/user/menu', UserMenuAPIView.as_view()),
+    path('api/v1/group/menu', GroupMenuAPIView.as_view()),
     path('api/v1/user/group', UserGroupAPIView.as_view()),
     path('api/v1/tags', TagsAPIView.as_view()),
     path('api/v1/category', CategoryAPIView.as_view()),

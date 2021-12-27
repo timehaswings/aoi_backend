@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 
 
 # Create your models here.
@@ -208,5 +208,16 @@ class Menu(models.Model):
 
     class Meta:
         db_table = 'tb_menu'
+        verbose_name = '菜单表'
+        verbose_name_plural = verbose_name
+
+
+class GroupMenu(models.Model):
+    id = models.AutoField(primary_key=True, verbose_name='自增id')
+    menu = models.ForeignKey(Menu, blank=True, null=True, on_delete=models.DO_NOTHING, verbose_name='菜单id')
+    group = models.ForeignKey(Group, blank=True, null=True, on_delete=models.DO_NOTHING, verbose_name='组别id')
+
+    class Meta:
+        db_table = 'tb_group_menu'
         verbose_name = '菜单表'
         verbose_name_plural = verbose_name

@@ -65,7 +65,7 @@ class UserGroupAPIView(APIView):
             groups = []
             user.groups.clear()
         result = {
-            'msg': '获取成功',
+            'msg': '添加成功',
             'success': True,
             'data': GroupSerializer(groups, many=True).data,
         }
