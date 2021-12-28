@@ -79,6 +79,7 @@ class UserAPIView(APIView):
         :return:
         """
         data = request.data
+        username = data.get('username')
         email = data.get('email')
         password = data.get('password')
         if not email or not password:
@@ -92,7 +93,8 @@ class UserAPIView(APIView):
                 'msg': '当前邮箱已被注册',
                 'success': False
             }, status.HTTP_200_OK)
-        username = email.split('@')[0]
+        if not username:
+            username = email.split('@')[0]
         user = User.objects.create_user(username=username, password=password, email=email)
         return Response({
             'msg': '添加成功',
@@ -116,11 +118,9 @@ class UserAPIView(APIView):
                 'msg': '数据不存在',
                 'success': False
             }, status.HTTP_200_OK)
+        # 不能直接修改密码
         if data.get('password'):
-            return Response({
-                'msg': '不可修改密码',
-                'success': False
-            }, status.HTTP_200_OK)
+            del data['password']
         serializer = UserSerializer(obj, data=data, partial=True)
         try:
             serializer.is_valid(raise_exception=True)
