@@ -17,7 +17,7 @@ from core.travel.travel_view import UserTravelAPIView
 from core.user.user_view import UserAPIView, PasswordAPIView
 from core.user.group_view import GroupAPIView
 from core.user.permission_view import PermissionAPIView
-from core.home.menu_view import CommonMenuApiView
+from core.home.menu_view import PublicMenuApiView, PrivateMenuApiView
 from core.user.group_perm_view import GroupPermAPIView
 from core.user.user_group_view import UserGroupAPIView
 from core.user.group_menu_view import GroupMenuAPIView, UserMenuAPIView
@@ -30,7 +30,8 @@ from aoi.settings import MEDIA_ROOT
 
 urlpatterns = [
     path('api/v1/register', RegisterAPIView.as_view()),
-    path('api/v1/home/menu', CommonMenuApiView.as_view()),
+    path('api/v1/home/public/menu', PublicMenuApiView.as_view()),
+    path('api/v1/home/private/menu', PrivateMenuApiView.as_view()),
     path('api/v1/site', SiteAPIView.as_view()),
     path('api/v1/user', UserAPIView.as_view()),
     path('api/v1/password', UserAPIView.as_view()),

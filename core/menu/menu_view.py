@@ -12,32 +12,24 @@ from rest_framework.response import Response
 from rest_framework import status
 
 
-def recursion_menu(menus, menu, require_login):
+def recursion_menu(menus, menu):
     if not menus or not menu:
         return
     for sub_menu in menus:
         if sub_menu['parent_id'] == menu['id']:
             if 'children' in menu.keys():
-                if require_login is None:
-                    menu['children'].append(sub_menu)
-                elif require_login:
-                    menu['children'].append(sub_menu)
+                menu['children'].append(sub_menu)
             else:
-                if require_login is None:
-                    menu['children'] = [sub_menu]
-                elif require_login:
-                    menu['children'] = [sub_menu]
-            recursion_menu(menus, sub_menu, require_login)
+                menu['children'] = [sub_menu]
+            recursion_menu(menus, sub_menu)
 
 
-def convert_menu_tree(menus, require_login=None):
+def convert_menu_tree(menus):
     menu_tree = []
     for menu in menus:
         if menu['parent_id'] == -1:
-            if require_login is not None and not require_login:
-                break
             menu_tree.append(menu)
-            recursion_menu(menus, menu, require_login)
+            recursion_menu(menus, menu)
     return menu_tree
 
 
@@ -59,7 +51,11 @@ class MenuAPIView(CommonAPIView):
         :param kwargs:
         :return:
         """
+        data = request.GET
+        require_login = data.get('requireLogin')
         filters = {'is_delete': 0}
+        if require_login:
+            filters['require_login'] = require_login
         menus = Menu.objects.filter(**filters).order_by('parent_id', 'sort')
         menus = MenuSerializer(menus, many=True).data
         menu_tree = convert_menu_tree(menus)

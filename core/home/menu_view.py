@@ -15,7 +15,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class CommonMenuApiView(APIView):
+class PublicMenuApiView(APIView):
     permission_classes = []
     authentication_classes = []
 
@@ -23,7 +23,25 @@ class CommonMenuApiView(APIView):
         filters = {'is_delete': 0, 'require_login': 0}
         menus = Menu.objects.filter(**filters).order_by('parent_id', 'sort')
         menus = MenuSerializer(menus, many=True).data
-        menu_tree = convert_menu_tree(menus, True)
+        menu_tree = convert_menu_tree(menus)
+        result = {
+            'msg': '获取成功',
+            'success': True,
+            'data': menu_tree
+        }
+        return Response(result, status.HTTP_200_OK)
+
+
+class PrivateMenuApiView(APIView):
+
+    def get(self, request, *args, **kwargs):
+        if request.user.is_superuser:
+            filters = {'is_delete': 0}
+            menus = Menu.objects.filter(**filters).order_by('parent_id', 'sort')
+            menus = MenuSerializer(menus, many=True).data
+            menu_tree = convert_menu_tree(menus)
+        else:
+            menu_tree = []
         result = {
             'msg': '获取成功',
             'success': True,
