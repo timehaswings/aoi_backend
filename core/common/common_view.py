@@ -77,7 +77,15 @@ class CommonAPIView(APIView):
         if self.query:
             for param in self.query:
                 if data.get(param['request_key']):
-                    filters[param['filter_key']] = data.get(param['request_key'])
+                    value = data.get(param['request_key'])
+                    if 'type' in param:
+                        if param['type'] == 'boolean':
+                            bool = True if value in ['true', 1, '1'] else False
+                            filters[param['filter_key']] = bool
+                        else:
+                            filters[param['filter_key']] = value
+                    else:
+                        filters[param['filter_key']] = value
         sort = data.get('sort')
         if sort:
             sort_list = sort.split(',')

@@ -20,7 +20,7 @@ class DiscoverAPIView(CommonAPIView):
     update_insert_updater = True
     query = [
         {'filter_key': 'id', 'request_key': 'id'},
-        {'filter_key': 'is_active', 'request_key': 'isActive'},
+        {'filter_key': 'is_active', 'request_key': 'isActive', 'type': 'boolean'},
         {'filter_key': 'name__contains', 'request_key': 'name'},
         {'filter_key': 'content__contains', 'request_key': 'content'},
     ]

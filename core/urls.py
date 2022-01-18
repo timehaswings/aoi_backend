@@ -18,6 +18,8 @@ from core.user.user_view import UserAPIView, PasswordAPIView
 from core.user.group_view import GroupAPIView
 from core.user.permission_view import PermissionAPIView
 from core.home.menu_view import PublicMenuApiView, PrivateMenuApiView
+from core.home.config_view import ConfigApiView
+from core.home.index_view import CarouselApiView, CategoryVideoApiView
 from core.user.group_perm_view import GroupPermAPIView
 from core.user.user_group_view import UserGroupAPIView
 from core.user.group_menu_view import GroupMenuAPIView, UserMenuAPIView
@@ -30,6 +32,9 @@ from aoi.settings import MEDIA_ROOT
 
 urlpatterns = [
     path('api/v1/register', RegisterAPIView.as_view()),
+    path('api/v1/home/config', ConfigApiView.as_view()),
+    path('api/v1/home/index/carousel', CarouselApiView.as_view()),
+    path('api/v1/home/index/category', CategoryVideoApiView.as_view()),
     path('api/v1/home/public/menu', PublicMenuApiView.as_view()),
     path('api/v1/home/private/menu', PrivateMenuApiView.as_view()),
     path('api/v1/site', SiteAPIView.as_view()),

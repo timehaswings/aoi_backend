@@ -4,7 +4,7 @@
 # @Time    : 2021/8/25 10:15
 # @Author  : NoWords
 # @FileName: base_video_view.py
-from rest_framework.views import APIView
+from core.common.common_view import CommonAPIView
 from core.models import BaseVideo
 from core.serializers import BaseVideoSerializer
 from rest_framework.response import Response
@@ -15,7 +15,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class BaseVideoAPIView(APIView):
+class BaseVideoAPIView(CommonAPIView):
     """
     视频管理
     """
@@ -26,7 +26,7 @@ class BaseVideoAPIView(APIView):
     update_insert_updater = True
     query = [
         {'filter_key': 'id', 'request_key': 'id'},
-        {'filter_key': 'is_active', 'request_key': 'isActive'},
+        {'filter_key': 'is_active', 'request_key': 'isActive', 'type': 'boolean'},
         {'filter_key': 'name__contains', 'request_key': 'name'},
     ]
 

@@ -4,8 +4,8 @@
 # @Time    : 2022/1/26 10:04
 # @Author  : NoWords
 # @FileName: menu_view.py
-from ..serializers import MenuSerializer
-from ..models import Menu
+from ..serializers import MenuSerializer, ConfigSerializer
+from ..models import Menu, Config
 from ..menu.menu_view import convert_menu_tree
 from rest_framework.views import APIView
 from rest_framework.response import Response
