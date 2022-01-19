@@ -47,16 +47,39 @@ class TagsApiView(APIView):
         return Response(result, status.HTTP_200_OK)
 
 
-class ApiView(APIView):
+class VideoApiView(APIView):
     permission_classes = []
     authentication_classes = []
 
     def get(self, request, *args, **kwargs):
         filters = {'is_delete': 0, 'is_active': 1}
-
+        params = request.GET
+        page_size = params.get('pageSize')
+        page_no = params.get('pageNo')
+        keyword = params.get('keyword')
+        sort_list = ['-sort']
+        if params.get('category_id'):
+            filters['category_id'] = params.get('category_id')
+        if params.get('tag_ids'):
+            filters['tags_id__in'] = params.get('tag_ids').split(',')
+        if params.get('sort'):
+            sort_list = params.get('sort').split(',')
+        model = BaseVideo.objects.filter(**filters)
+        if keyword:
+            model = model.filter(Q(name__contains=keyword) | Q(desc__contains=keyword) | Q(artists__contains=keyword))
+        if page_size and page_no:
+            start = (int(page_no) - 1) * int(page_size)
+            end = start + int(page_size)
+            rows = model.order_by(*sort_list)[start:end]
+        else:
+            rows = model.order_by(*sort_list)
+        rows = BaseVideoSerializer(rows, many=True).data
         result = {
             'msg': '获取成功',
             'success': True,
-            'data': []
+            'data': {
+                'total': model.count(),
+                'rows': rows
+            }
         }
         return Response(result, status.HTTP_200_OK)

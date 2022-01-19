@@ -2,5 +2,7 @@
 # !/usr/bin/env python
 
 # @Time    : 2022/1/18 12:32
-# @Author  : wanggang6595
+# @Author  : NoWords
 # @FileName: about_view.py
+
+
