@@ -13,13 +13,12 @@ from core.deeds.deeds_view import DeedsAPIView
 from core.discover.discover_view import DiscoverAPIView
 from core.tags.tags_view import TagsAPIView
 from core.site.site_view import SiteAPIView
+from core.area.area_view import AreaAPIView
 from core.travel.travel_view import UserTravelAPIView
 from core.user.user_view import UserAPIView, PasswordAPIView
 from core.user.group_view import GroupAPIView
 from core.user.permission_view import PermissionAPIView
-from core.home.menu_view import PublicMenuApiView, PrivateMenuApiView
-from core.home.config_view import ConfigApiView
-from core.home.index_view import CarouselApiView, CategoryVideoApiView
+from core.home import category_view, menu_view, config_view, index_view
 from core.user.group_perm_view import GroupPermAPIView
 from core.user.user_group_view import UserGroupAPIView
 from core.user.group_menu_view import GroupMenuAPIView, UserMenuAPIView
@@ -32,11 +31,15 @@ from aoi.settings import MEDIA_ROOT
 
 urlpatterns = [
     path('api/v1/register', RegisterAPIView.as_view()),
-    path('api/v1/home/config', ConfigApiView.as_view()),
-    path('api/v1/home/index/carousel', CarouselApiView.as_view()),
-    path('api/v1/home/index/category', CategoryVideoApiView.as_view()),
-    path('api/v1/home/public/menu', PublicMenuApiView.as_view()),
-    path('api/v1/home/private/menu', PrivateMenuApiView.as_view()),
+    path('api/v1/home/config', config_view.ConfigApiView.as_view()),
+    path('api/v1/home/category', category_view.CategoryApiView.as_view()),
+    path('api/v1/home/tags', category_view.TagsApiView.as_view()),
+    path('api/v1/home/area', category_view.AreaApiView.as_view()),
+    path('api/v1/home/video', category_view.VideoApiView.as_view()),
+    path('api/v1/home/index/carousel', index_view.CarouselApiView.as_view()),
+    path('api/v1/home/index/category', index_view.CategoryVideoApiView.as_view()),
+    path('api/v1/home/public/menu', menu_view.PublicMenuApiView.as_view()),
+    path('api/v1/home/private/menu', menu_view.PrivateMenuApiView.as_view()),
     path('api/v1/site', SiteAPIView.as_view()),
     path('api/v1/user', UserAPIView.as_view()),
     path('api/v1/password', UserAPIView.as_view()),
@@ -47,6 +50,7 @@ urlpatterns = [
     path('api/v1/group/menu', GroupMenuAPIView.as_view()),
     path('api/v1/user/group', UserGroupAPIView.as_view()),
     path('api/v1/tags', TagsAPIView.as_view()),
+    path('api/v1/area', AreaAPIView.as_view()),
     path('api/v1/category', CategoryAPIView.as_view()),
     path('api/v1/config', ConfigAPIView.as_view()),
     path('api/v1/video', BaseVideoAPIView.as_view()),

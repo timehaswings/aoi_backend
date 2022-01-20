@@ -5,8 +5,8 @@
 # @Author  : NoWords
 # @FileName: category_view.py
 
-from ..serializers import CategorySerializer, TagsSerializer
-from ..models import Category, Tags
+from ..serializers import CategorySerializer, TagsSerializer, AreaSerializer, BaseVideoSerializer
+from ..models import Category, Tags, Area, BaseVideo
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -43,6 +43,21 @@ class TagsApiView(APIView):
             'msg': '获取成功',
             'success': True,
             'data': tags
+        }
+        return Response(result, status.HTTP_200_OK)
+
+
+class AreaApiView(APIView):
+    permission_classes = []
+    authentication_classes = []
+
+    def get(self, request, *args, **kwargs):
+        area = Area.objects.all().order_by('sort')
+        area = AreaSerializer(area, many=True).data
+        result = {
+            'msg': '获取成功',
+            'success': True,
+            'data': area
         }
         return Response(result, status.HTTP_200_OK)
 

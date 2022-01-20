@@ -10,7 +10,8 @@ from rest_framework.validators import UniqueValidator
 from aoi.settings import BASE_VIDEO_URL, BASE_THUMB_URL
 
 from core.models import Tags, Category, BaseVideo, \
-    Comment, Config, UserTravel, Deeds, Discover, Menu, GroupMenu
+    Comment, Config, UserTravel, Deeds, Discover, Menu, \
+    GroupMenu, Area
 from rest_framework import serializers
 
 
@@ -47,6 +48,13 @@ class TagsSerializer(serializers.ModelSerializer):
         fields = '__all__'
         extra_kwargs = {'is_delete': {'write_only': True}}
         read_only_fields = ['create_time']
+
+
+class AreaSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Area
+        fields = '__all__'
 
 
 class CategorySerializer(serializers.ModelSerializer):

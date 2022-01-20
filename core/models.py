@@ -26,6 +26,18 @@ class Tags(models.Model):
         verbose_name_plural = verbose_name
 
 
+# 地区管理表
+class Area(models.Model):
+    id = models.AutoField(primary_key=True, verbose_name='自增id')
+    name = models.CharField(max_length=50, verbose_name='地区名称')
+    sort = models.IntegerField(default=100, verbose_name='排序前后')
+
+    class Meta:
+        db_table = 'tb_area'
+        verbose_name = '地区表'
+        verbose_name_plural = verbose_name
+
+
 # 分类管理表
 class Category(models.Model):
     id = models.AutoField(primary_key=True, verbose_name='自增id')
