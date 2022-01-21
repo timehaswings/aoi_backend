@@ -6,7 +6,7 @@
 # @FileName: menu_view.py
 from ..serializers import MenuSerializer, ConfigSerializer
 from ..models import Menu, Config
-from ..menu.menu_view import convert_menu_tree
+from ..menu.menu_view import convert_public_tree, convert_private_tree
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -20,10 +20,10 @@ class PublicMenuApiView(APIView):
     authentication_classes = []
 
     def get(self, request, *args, **kwargs):
-        filters = {'is_delete': 0, 'require_login': 0}
+        filters = {'is_delete': 0}
         menus = Menu.objects.filter(**filters).order_by('parent_id', 'sort')
         menus = MenuSerializer(menus, many=True).data
-        menu_tree = convert_menu_tree(menus)
+        menu_tree = convert_public_tree(menus)
         result = {
             'msg': '获取成功',
             'success': True,
@@ -39,7 +39,7 @@ class PrivateMenuApiView(APIView):
             filters = {'is_delete': 0}
             menus = Menu.objects.filter(**filters).order_by('parent_id', 'sort')
             menus = MenuSerializer(menus, many=True).data
-            menu_tree = convert_menu_tree(menus)
+            menu_tree = convert_private_tree(menus)
         else:
             menu_tree = []
         result = {

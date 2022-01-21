@@ -33,6 +33,24 @@ def convert_menu_tree(menus):
     return menu_tree
 
 
+def convert_public_tree(menus):
+    menu_tree = []
+    for menu in menus:
+        if menu['id'] == 2:
+            menu_tree.append(menu)
+            recursion_menu(menus, menu)
+    return menu_tree
+
+
+def convert_private_tree(menus):
+    menu_tree = []
+    for menu in menus:
+        if menu['id'] == 3:
+            menu_tree.append(menu)
+            recursion_menu(menus, menu)
+    return menu_tree
+
+
 class MenuAPIView(CommonAPIView):
     """
     菜单管理

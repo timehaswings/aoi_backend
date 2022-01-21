@@ -7,6 +7,7 @@
 
 from ..serializers import CategorySerializer, TagsSerializer, AreaSerializer, BaseVideoSerializer
 from ..models import Category, Tags, Area, BaseVideo
+from ..common.unlimited_data_view import UnlimitedDataView
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -15,51 +16,24 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class CategoryApiView(APIView):
-    permission_classes = []
-    authentication_classes = []
-
-    def get(self, request, *args, **kwargs):
-        filters = {'is_delete': 0, 'is_active': 1}
-        category = Category.objects.filter(**filters).order_by('sort')
-        category = CategorySerializer(category, many=True).data
-        result = {
-            'msg': '获取成功',
-            'success': True,
-            'data': category
-        }
-        return Response(result, status.HTTP_200_OK)
+class CategoryApiView(UnlimitedDataView):
+    serializer = CategorySerializer
+    model = Category
+    sort = 'sort'
+    filters = {'is_delete': 0, 'is_active': 1}
 
 
-class TagsApiView(APIView):
-    permission_classes = []
-    authentication_classes = []
-
-    def get(self, request, *args, **kwargs):
-        filters = {'is_delete': 0, 'is_active': 1}
-        tags = Tags.objects.filter(**filters).order_by('sort')
-        tags = TagsSerializer(tags, many=True).data
-        result = {
-            'msg': '获取成功',
-            'success': True,
-            'data': tags
-        }
-        return Response(result, status.HTTP_200_OK)
+class TagsApiView(UnlimitedDataView):
+    serializer = TagsSerializer
+    model = Tags
+    sort = 'sort'
+    filters = {'is_delete': 0, 'is_active': 1}
 
 
-class AreaApiView(APIView):
-    permission_classes = []
-    authentication_classes = []
-
-    def get(self, request, *args, **kwargs):
-        area = Area.objects.all().order_by('sort')
-        area = AreaSerializer(area, many=True).data
-        result = {
-            'msg': '获取成功',
-            'success': True,
-            'data': area
-        }
-        return Response(result, status.HTTP_200_OK)
+class AreaApiView(UnlimitedDataView):
+    serializer = AreaSerializer
+    model = Area
+    sort = 'sort'
 
 
 class VideoApiView(APIView):
