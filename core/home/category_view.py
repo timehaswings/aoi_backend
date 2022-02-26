@@ -47,6 +47,8 @@ class VideoApiView(APIView):
         page_no = params.get('pageNo')
         keyword = params.get('keyword')
         sort_list = ['-sort']
+        if params.get('id'):
+            filters['id'] = params.get('id')
         if params.get('category_id'):
             filters['category_id'] = params.get('category_id')
         if params.get('tag_ids'):

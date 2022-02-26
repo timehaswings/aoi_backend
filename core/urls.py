@@ -18,7 +18,7 @@ from core.travel.travel_view import UserTravelAPIView
 from core.user.user_view import UserAPIView, PasswordAPIView
 from core.user.group_view import GroupAPIView
 from core.user.permission_view import PermissionAPIView
-from core.home import category_view, menu_view, config_view, index_view
+from core.home import category_view, menu_view, config_view, index_view, recommend_view
 from core.user.group_perm_view import GroupPermAPIView
 from core.user.user_group_view import UserGroupAPIView
 from core.user.group_menu_view import GroupMenuAPIView, UserMenuAPIView
@@ -40,6 +40,7 @@ urlpatterns = [
     path('api/v1/home/index/category', index_view.CategoryVideoApiView.as_view()),
     path('api/v1/home/public/menu', menu_view.PublicMenuApiView.as_view()),
     path('api/v1/home/private/menu', menu_view.PrivateMenuApiView.as_view()),
+    path('api/v1/home/video/recommend', recommend_view.RecommendApiView.as_view()),
     path('api/v1/site', SiteAPIView.as_view()),
     path('api/v1/user', UserAPIView.as_view()),
     path('api/v1/password', UserAPIView.as_view()),
