@@ -2,13 +2,13 @@
 # !/usr/bin/env python
 
 # @Time    : 2022/2/26 9:24
-# @Author  : nowords
+# @Author  : NoWords
 # @FileName: recommend_view.py
 import random
 
 from core.serializers import BaseVideoSerializer
 from ..models import Tags, BaseVideo
-from rest_framework.views import APIView
+from ..common.unlimited_data_view import UnlimitedDataView
 from rest_framework.response import Response
 from rest_framework import status
 import logging
@@ -16,7 +16,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class RecommendApiView(APIView):
+class RecommendApiView(UnlimitedDataView):
 
     def get(self, request, *args, **kwargs):
         params = request.GET
@@ -37,7 +37,7 @@ class RecommendApiView(APIView):
             rows = BaseVideoSerializer(video_list, many=True).data
         else:
             start = random.randint(0, video_list.count()-limit)
-            rows = BaseVideoSerializer(video_list[start, limit], many=True).data
+            rows = BaseVideoSerializer(video_list[start:limit], many=True).data
         result = {
             'msg': '获取成功',
             'success': True,
