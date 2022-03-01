@@ -4,8 +4,9 @@
 # @Time    : 2022/1/26 10:04
 # @Author  : NoWords
 # @FileName: menu_view.py
-from ..serializers import MenuSerializer, ConfigSerializer
-from ..models import Menu, Config
+from ..serializers import MenuSerializer
+from ..models import Menu
+from ..common.unlimited_data_view import UnlimitedDataView
 from ..menu.menu_view import convert_public_tree, convert_private_tree
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -15,9 +16,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class PublicMenuApiView(APIView):
-    permission_classes = []
-    authentication_classes = []
+class PublicMenuApiView(UnlimitedDataView):
 
     def get(self, request, *args, **kwargs):
         filters = {'is_delete': 0}

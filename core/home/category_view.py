@@ -8,7 +8,6 @@
 from ..serializers import CategorySerializer, TagsSerializer, AreaSerializer, BaseVideoSerializer
 from ..models import Category, Tags, Area, BaseVideo
 from ..common.unlimited_data_view import UnlimitedDataView
-from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 import logging
@@ -36,9 +35,7 @@ class AreaApiView(UnlimitedDataView):
     sort = 'sort'
 
 
-class VideoApiView(APIView):
-    permission_classes = []
-    authentication_classes = []
+class VideoApiView(UnlimitedDataView):
 
     def get(self, request, *args, **kwargs):
         filters = {'is_delete': 0, 'is_active': 1}

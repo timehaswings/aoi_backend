@@ -7,8 +7,8 @@
 
 from ..serializers import BaseVideoSerializer, CategorySerializer
 from ..models import BaseVideo, Category
+from ..common.unlimited_data_view import UnlimitedDataView
 from random import randint
-from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 import logging
@@ -16,12 +16,10 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class CarouselApiView(APIView):
+class CarouselApiView(UnlimitedDataView):
     """
     主页轮播数据
     """
-    permission_classes = []
-    authentication_classes = []
 
     def get(self, request, *args, **kwargs):
         filters = {'is_delete': 0, 'is_active': 1}
@@ -41,12 +39,10 @@ class CarouselApiView(APIView):
         return Response(result, status.HTTP_200_OK)
 
 
-class CategoryVideoApiView(APIView):
+class CategoryVideoApiView(UnlimitedDataView):
     """
     主页分类数据
     """
-    permission_classes = []
-    authentication_classes = []
 
     def get(self, request, *args, **kwargs):
         # 获取随机分类
