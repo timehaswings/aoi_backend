@@ -19,7 +19,7 @@ from core.user.user_view import UserAPIView, PasswordAPIView
 from core.user.group_view import GroupAPIView
 from core.user.permission_view import PermissionAPIView
 from core.home import category_view, menu_view, config_view, index_view, \
-    recommend_view, comment_view, discover_view
+    recommend_view, comment_view, discover_view, personal_view
 from core.user.group_perm_view import GroupPermAPIView
 from core.user.user_group_view import UserGroupAPIView
 from core.user.group_menu_view import GroupMenuAPIView, UserMenuAPIView
@@ -44,6 +44,8 @@ urlpatterns = [
     path('api/v1/home/video/recommend', recommend_view.RecommendApiView.as_view()),
     path('api/v1/home/video/comment', comment_view.CommentApiView.as_view()),
     path('api/v1/home/about/discover', discover_view.DiscoverApiView.as_view()),
+    path('api/v1/home/personal/operation/history', personal_view.OperationHistoryApiView.as_view()),
+    path('api/v1/home/personal/user/info', personal_view.UserInfoApiView.as_view()),
     path('api/v1/site', SiteAPIView.as_view()),
     path('api/v1/user', UserAPIView.as_view()),
     path('api/v1/password', UserAPIView.as_view()),

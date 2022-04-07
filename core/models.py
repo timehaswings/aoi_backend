@@ -155,7 +155,6 @@ class Config(models.Model):
 class UserTravel(models.Model):
     OPERATION_CHOICES = (
         ('come', '进入'),
-        ('leave', '离开'),
         ('favor', '喜爱'),
         ('oppose', '抵触'),
         ('comment', '评论'),
