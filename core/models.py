@@ -69,6 +69,7 @@ class BaseVideo(models.Model):
     release_time = models.DateField(null=True, verbose_name='上映时间')
     m3u8_path = models.CharField(max_length=300, verbose_name='视频地址')
     thumb_path = models.CharField(max_length=300, verbose_name='缩略图')
+
     sort = models.IntegerField(default=100, verbose_name='排序前后')
     is_active = models.BooleanField(default=1, verbose_name='是否启用')
     create_id = models.IntegerField(verbose_name='创建人ID')
@@ -155,6 +156,7 @@ class Config(models.Model):
 class UserTravel(models.Model):
     OPERATION_CHOICES = (
         ('come', '进入'),
+        ('leave', '离开'),
         ('favor', '喜爱'),
         ('oppose', '抵触'),
         ('comment', '评论'),
