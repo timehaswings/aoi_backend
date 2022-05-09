@@ -9,6 +9,8 @@ Django3.1 + MariaDB + asgi + websocket
 ## 快速开始
 
 ```
+apt-get install python-pip python-dev libmariadbclient-dev libssl-dev
+
 // 拉取代码
 git clone git@github.com:timehaswings/aoi_backend.git
 
